@@ -1,0 +1,11 @@
+<resources>
+    <color name="mega_bg">#0A0818</color>
+    <style name="Theme.Mega" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash</item>
+        <item name="android:statusBarColor">@color/mega_bg</item>
+        <item name="android:navigationBarColor">@color/mega_bg</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+        <item name="android:windowSplashScreenBackground">@color/mega_bg</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_logo</item>
+    </style>
+</resources>
