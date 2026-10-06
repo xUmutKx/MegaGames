@@ -366,7 +366,7 @@ button,input{font:inherit}button{color:#fff;cursor:pointer}
  function goToHub(){document.getElementById('appTitleScreen').style.display='none';try{window.MegaSave.setMeta({introShown:true});}catch(e){}}
  try{
   var seen=!!(window.MegaSave&&window.MegaSave.meta().introShown);
-  if(!seen)document.getElementById('appTitleScreen').style.display='flex';
+  /* Realms of Factions splash removed */
  }catch(e){}
  document.getElementById('atPlay').addEventListener('click',goToHub);
  document.getElementById('atContinue').addEventListener('click',goToHub);
