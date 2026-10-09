@@ -1,0 +1,1330 @@
+[
+{
+"id": "p2nono",
+"title": "Nonogram",
+"icon": "🔲",
+"cat": "PUZZLE",
+"desc": "Sayı ipuçlarıyla gizli resmi çöz. Sürükleyerek boya.",
+"engine": "p2nono"
+},
+{
+"id": "p2flow",
+"title": "Flow Bağla",
+"icon": "🌈",
+"cat": "PUZZLE",
+"desc": "Aynı renkli noktaları sürükleyerek birleştir.",
+"engine": "p2flow"
+},
+{
+"id": "p2blocks",
+"title": "Blok Patlat",
+"icon": "🧱",
+"cat": "PUZZLE",
+"desc": "Blokları 10x10 ızgaraya sürükle, satır/sütun doldur, patlat.",
+"engine": "p2blocks"
+},
+{
+"id": "p2rush",
+"title": "Park Çıkışı",
+"icon": "🚗",
+"cat": "PUZZLE",
+"desc": "Arabaları kaydır, kırmızı arabayı çıkışa ulaştır.",
+"engine": "p2rush"
+},
+{
+"id": "p2word",
+"title": "Harf Avı",
+"icon": "🔤",
+"cat": "PUZZLE",
+"desc": "Harf ızgarasında Türkçe kelimeleri bul (ipuçlu).",
+"engine": "p2word"
+},
+{
+"id": "p3roads",
+"title": "Road City",
+"icon": "🛣️",
+"cat": "STRATEGY",
+"desc": "Yol çiz, evleri renkli hedeflere bağla; trafik tıkanırsa biter.",
+"engine": "p3roads"
+},
+{
+"id": "p3empire",
+"title": "Imparatorluk",
+"icon": "👑",
+"cat": "STRATEGY",
+"desc": "Idle imparatorluk: bina kur, yüksel, taç topla.",
+"engine": "p3empire"
+},
+{
+"id": "p3cafe",
+"title": "Kafe Zinciri",
+"icon": "☕",
+"cat": "SIMULATION",
+"desc": "Siparişleri zincirle hazırla, müşteriyi mutlu et, kafeni büyüt.",
+"engine": "p3cafe"
+},
+{
+"id": "p3space",
+"title": "Uzay Tüccarı",
+"icon": "🚀",
+"cat": "STRATEGY",
+"desc": "Gezegenler arası ucuza al pahalıya sat, korsanlardan kaç, gemini geliştir.",
+"engine": "p3space"
+},
+{
+"id": "p5_archery",
+"title": "Okçu Ustası",
+"icon": "🏹",
+"cat": "SPORTS",
+"desc": "Rüzgarı oku, nişan al, 12 okla hedef puanı topla.",
+"engine": "p5_archery"
+},
+{
+"id": "p5_shootout",
+"title": "Penaltı Kupası",
+"icon": "🥅",
+"cat": "SPORTS",
+"desc": "5 şut + 5 kaleci turu: kaydırarak at, dokunarak kurtar.",
+"engine": "p5_shootout"
+},
+{
+"id": "p5_boxing",
+"title": "Ring Kralı",
+"icon": "🥊",
+"cat": "ACTION",
+"desc": "Rakibin hamlesini oku: kaç, blokla, kombo vur. 3 rakip.",
+"engine": "p5_boxing"
+},
+{
+"id": "p5_angler",
+"title": "Boğaz Oltası",
+"icon": "🎣",
+"cat": "SIMULATION",
+"desc": "Zamanla, ritmi tut, nadir balıkları topla.",
+"engine": "p5_angler"
+},
+{
+"id": "p5_rhythm",
+"title": "Neon Saz Ritim",
+"icon": "🎵",
+"cat": "ARCADE",
+"desc": "4 şeritli ritim: 3 kısa şarkı, doğruluk hedefini tut.",
+"engine": "p5_rhythm"
+},
+{
+"id": "p5_skate",
+"title": "Kar Hilesi",
+"icon": "🏂",
+"cat": "SPORTS",
+"desc": "Rampalardan uç, takla at, raylarda kay; puan hedefine ulaş.",
+"engine": "p5_skate"
+},
+{
+"id": "p5_dungeon",
+"title": "Zindan Avcısı",
+"icon": "🗡️",
+"cat": "RPG",
+"desc": "Üretilen zindanda ilerle, tur tabanlı savaş, ganimet topla, ejderhayı yen.",
+"engine": "p5_dungeon"
+},
+{
+"id": "p1_crossing",
+"title": "Neon Crossing",
+"icon": "🐸",
+"cat": "ARCADE",
+"desc": "Yolu ve nehri geç, 5 eve ulaş.",
+"engine": "p1_crossing"
+},
+{
+"id": "p1_centipede",
+"title": "Cyber Worm",
+"icon": "🐛",
+"cat": "ARCADE",
+"desc": "Neon kurdu parçala, mantar tarlasını koru.",
+"engine": "p1_centipede"
+},
+{
+"id": "p1_bombmaze",
+"title": "Bomb Maze",
+"icon": "💣",
+"cat": "ACTION",
+"desc": "Blokları patlat, canavarları yok et, çıkışı bul.",
+"engine": "p1_bombmaze"
+},
+{
+"id": "p1_dig",
+"title": "Tunnel Digger",
+"icon": "⛏️",
+"cat": "ARCADE",
+"desc": "Toprağı kaz, canavarları şişirip patlat, kayaları düşür.",
+"engine": "p1_dig"
+},
+{
+"id": "p1_lander",
+"title": "Moon Lander",
+"icon": "🚀",
+"cat": "SIMULATION",
+"desc": "Yakıtı idareli kullan, pistlere yumuşak in.",
+"engine": "p1_lander"
+},
+{
+"id": "p7_stack",
+"title": "Neon Kule",
+"icon": "🧱",
+"cat": "ARCADE",
+"desc": "Kayan bloğu tam üstüne bırak, taşanı kes.",
+"engine": "p7_stack"
+},
+{
+"id": "p7_cake",
+"title": "Pasta Katı",
+"icon": "🎂",
+"cat": "ARCADE",
+"desc": "Pasta katlarını üst üste diz, mükemmel dokunuş katı geri büyütür.",
+"engine": "p7_stack"
+},
+{
+"id": "p7_crane",
+"title": "Vinç Ustası",
+"icon": "🏗️",
+"cat": "ARCADE",
+"desc": "Sallanan vinçten kasayı doğru anda bırak, kule dengeli kalsın.",
+"engine": "p7_stack"
+},
+{
+"id": "p10_tubes",
+"title": "Tüp Sıralama",
+"icon": "🧪",
+"cat": "PUZZLE",
+"desc": "Renkleri tüplerde grupla.",
+"engine": "p10_sort"
+},
+{
+"id": "p10_birds",
+"title": "Kuş Dalları",
+"icon": "🐦",
+"cat": "PUZZLE",
+"desc": "Aynı renk kuşları aynı dala topla.",
+"engine": "p10_sort"
+},
+{
+"id": "p10_balls",
+"title": "Top Tüpü",
+"icon": "🔴",
+"cat": "PUZZLE",
+"desc": "Her hamlede tek top taşı.",
+"engine": "p10_sort"
+},
+{
+"id": "p10_crates",
+"title": "Gizemli Kasalar",
+"icon": "📦",
+"cat": "PUZZLE",
+"desc": "Alttaki kasalar görünmez, sırala.",
+"engine": "p10_sort"
+},
+{
+"id": "p10_potions",
+"title": "Gizli İksirler",
+"icon": "⚗️",
+"cat": "PUZZLE",
+"desc": "Uzun şişeler, saklı renkler.",
+"engine": "p10_sort"
+},
+{
+"id": "p10_jars",
+"title": "Şekerli Kavanoz",
+"icon": "🍬",
+"cat": "PUZZLE",
+"desc": "Kısa kavanozlar, çok renk.",
+"engine": "p10_sort"
+},
+{
+"id": "p11_t1",
+"title": "Test",
+"icon": "🗡️",
+"cat": "ACTION",
+"desc": "x",
+"engine": "p11_survivor"
+},
+{
+"id": "p13_wd5",
+"title": "Kelime Avı 5",
+"icon": "🔤",
+"cat": "WORD",
+"desc": "6 hakta 5 harfli Türkçe kelimeyi bul.",
+"engine": "p13_wordle"
+},
+{
+"id": "p13_wd4",
+"title": "Kelime Avı 4",
+"icon": "🔡",
+"cat": "WORD",
+"desc": "4 harfli kelimeler, 5 hak, daha hızlı tempo.",
+"engine": "p13_wordle"
+},
+{
+"id": "p13_wd6",
+"title": "Uzun Kelime",
+"icon": "📏",
+"cat": "WORD",
+"desc": "6-8 harfli zor kelimeler.",
+"engine": "p13_wordle"
+},
+{
+"id": "p13_wdanimal",
+"title": "Hayvanat Bahçesi",
+"icon": "🦁",
+"cat": "WORD",
+"desc": "Gizli hayvan adını bul, ilk harf hediye.",
+"engine": "p13_wordle"
+},
+{
+"id": "p13_wdcity",
+"title": "İl İl Türkiye",
+"icon": "🗺️",
+"cat": "WORD",
+"desc": "81 ilden gizli şehri bul.",
+"engine": "p13_wordle"
+},
+{
+"id": "p13_wdfood",
+"title": "Mutfak Sırrı",
+"icon": "🍲",
+"cat": "WORD",
+"desc": "Türk mutfağından gizli yemeği tahmin et.",
+"engine": "p13_wordle"
+},
+{
+"id": "p13_wdblitz",
+"title": "Kelime Blitz",
+"icon": "⏱️",
+"cat": "WORD",
+"desc": "90 saniyede 4 kelime çöz, her doğru +8 sn.",
+"engine": "p13_wordle"
+},
+{
+"id": "p13_wdduo",
+"title": "İkili Kelime",
+"icon": "👯",
+"cat": "WORD",
+"desc": "Aynı tahminle iki kelimeyi birden çöz.",
+"engine": "p13_wordle"
+},
+{
+"id": "p13_mil",
+"title": "Kim 1 Milyon İster",
+"icon": "💰",
+"cat": "QUIZ",
+"desc": "12 soru, 3 joker: 1 milyonluk basamaklara tırman.",
+"engine": "p13_quiz"
+},
+{
+"id": "p13_mil_hist",
+"title": "Tarih Milyoneri",
+"icon": "🏛️",
+"cat": "QUIZ",
+"desc": "Sadece tarih soruları, zor sorular sona saklı.",
+"engine": "p13_quiz"
+},
+{
+"id": "p13_mil_sci",
+"title": "Bilim Merdiveni",
+"icon": "🔬",
+"cat": "QUIZ",
+"desc": "Fizik, kimya, biyoloji: bilim sorularıyla yüksel.",
+"engine": "p13_quiz"
+},
+{
+"id": "p13_mil_geo",
+"title": "Dünya Turu Sınavı",
+"icon": "🌍",
+"cat": "QUIZ",
+"desc": "Coğrafya sorularıyla jokersiz zorlu yarış.",
+"engine": "p13_quiz"
+},
+{
+"id": "p13_blitz_all",
+"title": "Bilgi Blitz",
+"icon": "⚡",
+"cat": "QUIZ",
+"desc": "Soru başı 12 saniye, 3 can, 15 doğru yap.",
+"engine": "p13_quiz"
+},
+{
+"id": "p13_blitz_sport",
+"title": "Spor Çılgınlığı",
+"icon": "🏅",
+"cat": "QUIZ",
+"desc": "Spor ve sanat soruları, 10 saniye, 12 doğru.",
+"engine": "p13_quiz"
+},
+{
+"id": "p13_riddle",
+"title": "Bilmece Zamanı",
+"icon": "🧩",
+"cat": "QUIZ",
+"desc": "Türk bilmeceleri: doğru cevabı seç.",
+"engine": "p13_quiz"
+},
+{
+"id": "p13_duel",
+"title": "Bilgi Düellosu",
+"icon": "🥊",
+"cat": "QUIZ",
+"desc": "Rakip botla yarış: ilk 10 puana ulaşan kazanır.",
+"engine": "p13_quiz"
+},
+{
+"id": "p13_duel_pro",
+"title": "Usta Düellosu",
+"icon": "🦾",
+"cat": "QUIZ",
+"desc": "Daha hızlı ve isabetli rakip, 12 puana oyna.",
+"engine": "p13_quiz"
+},
+{
+"id": "snake",
+"title": "Cyber Snake",
+"icon": "🐍",
+"cat": "ARCADE",
+"desc": "Altın elmalar, hayalet ve yavaşlatma güçleri, kombo çarpanı.",
+"engine": "snake"
+},
+{
+"id": "breakout",
+"title": "Neon Breakout",
+"icon": "🧱",
+"cat": "ARCADE",
+"desc": "Güçlendiriciler, zırhlı ve patlayıcı tuğlalar, 3 can, seviyeler.",
+"engine": "breakout"
+},
+{
+"id": "pong",
+"title": "Retro Pong",
+"icon": "🏓",
+"cat": "ARCADE",
+"desc": "Dikey neon pong: spin, güç orbları ve gittikçe zekileşen CPU.",
+"engine": "pong"
+},
+{
+"id": "flappy",
+"title": "Cyber Bird",
+"icon": "🐤",
+"cat": "ARCADE",
+"desc": "Dokun-çırp: hareketli borular, kalkan, yavaşlatma, mükemmel geçiş bonusu.",
+"engine": "flappy"
+},
+{
+"id": "stack",
+"title": "Tower Stacker",
+"icon": "🏗️",
+"cat": "ARCADE",
+"desc": "Stack moving blocks.",
+"engine": "stack"
+},
+{
+"id": "maze",
+"title": "Neon Maze",
+"icon": "🌀",
+"cat": "ARCADE",
+"desc": "Navigate random mazes.",
+"engine": "maze"
+},
+{
+"id": "platformer",
+"title": "Cloud Platformer",
+"icon": "🪜",
+"cat": "ARCADE",
+"desc": "Bounce for gems.",
+"engine": "platformer"
+},
+{
+"id": "runner",
+"title": "Canyon Runner",
+"icon": "🏜️",
+"cat": "ARCADE",
+"desc": "Dodge boulders.",
+"engine": "runner"
+},
+{
+"id": "pac",
+"title": "Pellet Chase",
+"icon": "👻",
+"cat": "ARCADE",
+"desc": "Gobble pellets.",
+"engine": "pac"
+},
+{
+"id": "party",
+"title": "Fall Dash",
+"icon": "👑",
+"cat": "ARCADE",
+"desc": "Obstacle course.",
+"engine": "party"
+},
+{
+"id": "higherlower",
+"title": "Higher or Lower",
+"icon": "🃏",
+"cat": "ARCADE",
+"desc": "Guess the next card.",
+"engine": "higherlower"
+},
+{
+"id": "rps",
+"title": "Rock Paper Scissors",
+"icon": "✂️",
+"cat": "ARCADE",
+"desc": "Beat adaptive AI.",
+"engine": "rps"
+},
+{
+"id": "reaction",
+"title": "Reaction Test",
+"icon": "⚡",
+"cat": "ARCADE",
+"desc": "Tap when green.",
+"engine": "reaction"
+},
+{
+"id": "whack",
+"title": "Whack-a-Mole",
+"icon": "🔨",
+"cat": "ARCADE",
+"desc": "Whack the moles.",
+"engine": "whack"
+},
+{
+"id": "fruitcatch",
+"title": "Fruit Catch",
+"icon": "🍎",
+"cat": "ARCADE",
+"desc": "Catch fruit, dodge bombs.",
+"engine": "fruitcatch"
+},
+{
+"id": "pianotiles",
+"title": "Piano Tiles",
+"icon": "🎹",
+"cat": "ARCADE",
+"desc": "Hit falling notes.",
+"engine": "pianotiles"
+},
+{
+"id": "doodle",
+"title": "Doodle Jump",
+"icon": "🦘",
+"cat": "ARCADE",
+"desc": "Zıpla ve yüksel: yaylar, jet, hareketli ve kırılan platformlar, canavarlar.",
+"engine": "doodle"
+},
+{
+"id": "pinball",
+"title": "Neon Pinball",
+"icon": "🎰",
+"cat": "ARCADE",
+"desc": "Gerçek flipper fiziği: bumper, sapan, hedefler, çarpan ve çoklu top.",
+"engine": "pinball"
+},
+{
+"id": "dodge",
+"title": "Meteor Dodge",
+"icon": "☄️",
+"cat": "ACTION",
+"desc": "Dodge meteors.",
+"engine": "dodge"
+},
+{
+"id": "shooter",
+"title": "Space Defender",
+"icon": "🚀",
+"cat": "ACTION",
+"desc": "Destroy alien waves.",
+"engine": "shooter"
+},
+{
+"id": "asteroid",
+"title": "Asteroid Miner",
+"icon": "🪨",
+"cat": "ACTION",
+"desc": "Blast rocks.",
+"engine": "asteroid"
+},
+{
+"id": "tank",
+"title": "Tank Blitz",
+"icon": "🛡️",
+"cat": "ACTION",
+"desc": "Tank combat.",
+"engine": "tank"
+},
+{
+"id": "mech",
+"title": "Mech Arena",
+"icon": "🤖",
+"cat": "ACTION",
+"desc": "Heat & energy.",
+"engine": "mech"
+},
+{
+"id": "siege",
+"title": "Castle Defense",
+"icon": "🏰",
+"cat": "ACTION",
+"desc": "Hold the wall.",
+"engine": "siege"
+},
+{
+"id": "battleroyale",
+"title": "Pixel Royale",
+"icon": "🪂",
+"cat": "ACTION",
+"desc": "Eliminate rivals.",
+"engine": "battleroyale"
+},
+{
+"id": "drone",
+"title": "Sky Drone Strike",
+"icon": "🛸",
+"cat": "ACTION",
+"desc": "Drone shooter.",
+"engine": "drone"
+},
+{
+"id": "zone",
+"title": "Shrinking Zone",
+"icon": "🎯",
+"cat": "ACTION",
+"desc": "Collect orbs.",
+"engine": "zone"
+},
+{
+"id": "missile",
+"title": "Missile Command",
+"icon": "🚀",
+"cat": "ACTION",
+"desc": "Homing missiles.",
+"engine": "missile"
+},
+{
+"id": "invaders",
+"title": "Space Invaders",
+"icon": "👾",
+"cat": "ACTION",
+"desc": "March & shoot.",
+"engine": "invaders"
+},
+{
+"id": "tron",
+"title": "Tron Lightcycles",
+"icon": "🏍️",
+"cat": "ACTION",
+"desc": "Outlive riders.",
+"engine": "tron"
+},
+{
+"id": "bubble",
+"title": "Bubble Shooter",
+"icon": "🫧",
+"cat": "ACTION",
+"desc": "Pop groups of 3+.",
+"engine": "bubble"
+},
+{
+"id": "slingshot",
+"title": "Sling Assault",
+"icon": "🏹",
+"cat": "ACTION",
+"desc": "Demolish the wall.",
+"engine": "slingshot"
+},
+{
+"id": "memory",
+"title": "Memory Match",
+"icon": "🃏",
+"cat": "PUZZLE",
+"desc": "Match card pairs.",
+"engine": "memory"
+},
+{
+"id": "ttt",
+"title": "Tic-Tac-Toe AI",
+"icon": "❌",
+"cat": "PUZZLE",
+"desc": "Beat the AI.",
+"engine": "ttt"
+},
+{
+"id": "2048",
+"title": "2048 Neon",
+"icon": "🔢",
+"cat": "PUZZLE",
+"desc": "Merge to 2048.",
+"engine": "2048"
+},
+{
+"id": "tetris",
+"title": "Tetris",
+"icon": "🧩",
+"cat": "PUZZLE",
+"desc": "Clear lines!",
+"engine": "tetris"
+},
+{
+"id": "connect4",
+"title": "Connect 4",
+"icon": "🔴",
+"cat": "PUZZLE",
+"desc": "Four in a row.",
+"engine": "connect4"
+},
+{
+"id": "simon",
+"title": "Simon Says",
+"icon": "🎛️",
+"cat": "PUZZLE",
+"desc": "Repeat sequence.",
+"engine": "simon"
+},
+{
+"id": "numberorder",
+"title": "Number Order",
+"icon": "1️⃣",
+"cat": "PUZZLE",
+"desc": "Tap 1–12 in order.",
+"engine": "numberorder"
+},
+{
+"id": "lightsout",
+"title": "Lights Out",
+"icon": "💡",
+"cat": "PUZZLE",
+"desc": "All lights off.",
+"engine": "lightsout"
+},
+{
+"id": "minesweeper",
+"title": "Minesweeper",
+"icon": "💣",
+"cat": "PUZZLE",
+"desc": "Reveal safe cells.",
+"engine": "minesweeper"
+},
+{
+"id": "hangman",
+"title": "Hangman",
+"icon": "🔤",
+"cat": "PUZZLE",
+"desc": "Guess the word.",
+"engine": "hangman"
+},
+{
+"id": "td",
+"title": "Turret Defense",
+"icon": "🎯",
+"cat": "STRATEGY",
+"desc": "Build turrets.",
+"engine": "td"
+},
+{
+"id": "village",
+"title": "Pixel Village",
+"icon": "🏡",
+"cat": "STRATEGY",
+"desc": "Build & sustain.",
+"engine": "village"
+},
+{
+"id": "endzone",
+"title": "Wasteland",
+"icon": "☢️",
+"cat": "STRATEGY",
+"desc": "Survive fallout.",
+"engine": "endzone"
+},
+{
+"id": "colony",
+"title": "Moon Colony",
+"icon": "🌙",
+"cat": "STRATEGY",
+"desc": "Colonize space.",
+"engine": "colony"
+},
+{
+"id": "racing",
+"title": "Turbo Racer",
+"icon": "🏎️",
+"cat": "RACING",
+"desc": "3 laps, podium finish. Nitro, traffic, rivals.",
+"engine": "racing"
+},
+{
+"id": "drift",
+"title": "Neon Drift",
+"icon": "🏎️",
+"cat": "RACING",
+"desc": "Chain drifts.",
+"engine": "drift"
+},
+{
+"id": "golf",
+"title": "Mini Golf",
+"icon": "⛳",
+"cat": "SPORTS",
+"desc": "Putt to the hole.",
+"engine": "golf"
+},
+{
+"id": "basket",
+"title": "Hoop Master",
+"icon": "🏀",
+"cat": "SPORTS",
+"desc": "Score baskets.",
+"engine": "basket"
+},
+{
+"id": "bowling",
+"title": "Strike Bowling",
+"icon": "🎳",
+"cat": "SPORTS",
+"desc": "Knock down pins.",
+"engine": "bowling"
+},
+{
+"id": "pool",
+"title": "8-Ball Pool",
+"icon": "🎱",
+"cat": "SPORTS",
+"desc": "Pocket balls.",
+"engine": "pool"
+},
+{
+"id": "football",
+"title": "Pixel Soccer",
+"icon": "⚽",
+"cat": "SPORTS",
+"desc": "Shoot goals.",
+"engine": "football"
+},
+{
+"id": "tennis",
+"title": "Grand Tennis",
+"icon": "🎾",
+"cat": "SPORTS",
+"desc": "Fast rallies.",
+"engine": "tennis"
+},
+{
+"id": "darts",
+"title": "Dart Master",
+"icon": "🎯",
+"cat": "SPORTS",
+"desc": "Hit the bullseye.",
+"engine": "darts"
+},
+{
+"id": "farm",
+"title": "Cyber Farm",
+"icon": "🌾",
+"cat": "SIMULATION",
+"desc": "Plant & harvest.",
+"engine": "farm"
+},
+{
+"id": "factory",
+"title": "Factory Line",
+"icon": "🏭",
+"cat": "SIMULATION",
+"desc": "Process goods.",
+"engine": "factory"
+},
+{
+"id": "blockcraft",
+"title": "Block Miner",
+"icon": "⛏️",
+"cat": "SIMULATION",
+"desc": "Mine & build.",
+"engine": "blockcraft"
+},
+{
+"id": "impostor",
+"title": "Crew Suspect",
+"icon": "👾",
+"cat": "RPG",
+"desc": "Tasks & suspects.",
+"engine": "impostor"
+},
+{
+"id": "space3d",
+"title": "3D Warp Tunnel",
+"icon": "🌌",
+"cat": "3D",
+"desc": "Pseudo-3D tunnel.",
+"engine": "space3d"
+},
+{
+"id": "runner3d",
+"title": "3D Metro Dash",
+"icon": "🏃",
+"cat": "3D",
+"desc": "3D lane runner.",
+"engine": "runner3d"
+},
+{
+"id": "sudoku",
+"title": "Sudoku Mini",
+"icon": "🧮",
+"cat": "PUZZLE",
+"desc": "Fill the 4×4 grid.",
+"engine": "sudoku"
+},
+{
+"id": "checkers",
+"title": "Checkers",
+"icon": "⭕",
+"cat": "PUZZLE",
+"desc": "Capture all pieces.",
+"engine": "checkers"
+},
+{
+"id": "othello",
+"title": "Othello",
+"icon": "⚫",
+"cat": "PUZZLE",
+"desc": "Flip the board.",
+"engine": "othello"
+},
+{
+"id": "mancala",
+"title": "Mancala",
+"icon": "🕳️",
+"cat": "PUZZLE",
+"desc": "Sow & capture.",
+"engine": "mancala"
+},
+{
+"id": "mastermind",
+"title": "Code Breaker",
+"icon": "🧠",
+"cat": "PUZZLE",
+"desc": "Crack the code.",
+"engine": "mastermind"
+},
+{
+"id": "battleship",
+"title": "Battleship",
+"icon": "🚢",
+"cat": "PUZZLE",
+"desc": "Sink the fleet.",
+"engine": "battleship"
+},
+{
+"id": "fifteen",
+"title": "15 Puzzle",
+"icon": "🔳",
+"cat": "PUZZLE",
+"desc": "Slide into order.",
+"engine": "fifteen"
+},
+{
+"id": "watersort",
+"title": "Water Sort",
+"icon": "🧪",
+"cat": "PUZZLE",
+"desc": "Sort the colors.",
+"engine": "watersort"
+},
+{
+"id": "sokoban",
+"title": "Sokoban",
+"icon": "📦",
+"cat": "PUZZLE",
+"desc": "Push crates.",
+"engine": "sokoban"
+},
+{
+"id": "boulder",
+"title": "Boulder Dash",
+"icon": "💎",
+"cat": "PUZZLE",
+"desc": "Grab diamonds.",
+"engine": "boulder"
+},
+{
+"id": "pipes",
+"title": "Pipe Mania",
+"icon": "🔧",
+"cat": "PUZZLE",
+"desc": "Connect pipes.",
+"engine": "pipes"
+},
+{
+"id": "samegame",
+"title": "Same Game",
+"icon": "🟦",
+"cat": "PUZZLE",
+"desc": "Pop color groups.",
+"engine": "samegame"
+},
+{
+"id": "hanoi",
+"title": "Tower of Hanoi",
+"icon": "🗼",
+"cat": "PUZZLE",
+"desc": "Move the tower.",
+"engine": "hanoi"
+},
+{
+"id": "pegsol",
+"title": "Peg Solitaire",
+"icon": "⚪",
+"cat": "PUZZLE",
+"desc": "One peg left.",
+"engine": "pegsol"
+},
+{
+"id": "shutbox",
+"title": "Shut the Box",
+"icon": "🎲",
+"cat": "PUZZLE",
+"desc": "Close all numbers.",
+"engine": "shutbox"
+},
+{
+"id": "dicepoker",
+"title": "Dice Poker",
+"icon": "🎲",
+"cat": "PUZZLE",
+"desc": "Poker hands.",
+"engine": "dicepoker"
+},
+{
+"id": "wordsearch",
+"title": "Word Search",
+"icon": "🔍",
+"cat": "PUZZLE",
+"desc": "Step on letters.",
+"engine": "wordsearch"
+},
+{
+"id": "scramble",
+"title": "Word Scramble",
+"icon": "🔤",
+"cat": "PUZZLE",
+"desc": "Rebuild words.",
+"engine": "scramble"
+},
+{
+"id": "mathblitz",
+"title": "Math Blitz",
+"icon": "➗",
+"cat": "PUZZLE",
+"desc": "Solve equations.",
+"engine": "mathblitz"
+},
+{
+"id": "trivia",
+"title": "Trivia Rush",
+"icon": "💡",
+"cat": "PUZZLE",
+"desc": "Answer quizzes.",
+"engine": "trivia"
+},
+{
+"id": "life",
+"title": "Conway Life",
+"icon": "🦠",
+"cat": "PUZZLE",
+"desc": "Grow cells.",
+"engine": "life"
+},
+{
+"id": "sandbox",
+"title": "Sandbox",
+"icon": "⏳",
+"cat": "PUZZLE",
+"desc": "Paint falling sand.",
+"engine": "sandbox"
+},
+{
+"id": "duckhunt",
+"title": "Duck Hunt",
+"icon": "🦆",
+"cat": "ARCADE",
+"desc": "Shoot the ducks.",
+"engine": "duckhunt"
+},
+{
+"id": "frogger",
+"title": "Frogger",
+"icon": "🐸",
+"cat": "ARCADE",
+"desc": "Cross the road.",
+"engine": "frogger"
+},
+{
+"id": "bomber",
+"title": "Bomber Maze",
+"icon": "💣",
+"cat": "ARCADE",
+"desc": "Blast crates.",
+"engine": "bomber"
+},
+{
+"id": "colorswitch",
+"title": "Color Switch",
+"icon": "🎨",
+"cat": "ARCADE",
+"desc": "Match the ring.",
+"engine": "colorswitch"
+},
+{
+"id": "gravity",
+"title": "Gravity Flip",
+"icon": "🪐",
+"cat": "ARCADE",
+"desc": "Flip gravity.",
+"engine": "gravity"
+},
+{
+"id": "nightswarm",
+"title": "Night Swarm",
+"icon": "🧛",
+"cat": "ACTION",
+"desc": "Auto-fire survival.",
+"engine": "nightswarm"
+},
+{
+"id": "lander",
+"title": "Lunar Lander",
+"icon": "🌙",
+"cat": "ARCADE",
+"desc": "Soft landings.",
+"engine": "lander"
+},
+{
+"id": "hillclimb",
+"title": "Hill Climb",
+"icon": "⛰️",
+"cat": "ARCADE",
+"desc": "Watch fuel.",
+"engine": "hillclimb"
+},
+{
+"id": "artillery",
+"title": "Artillery Duel",
+"icon": "💥",
+"cat": "ACTION",
+"desc": "Aim & charge.",
+"engine": "artillery"
+},
+{
+"id": "tinyrts",
+"title": "Tiny RTS",
+"icon": "🏴",
+"cat": "ACTION",
+"desc": "Spawn units.",
+"engine": "tinyrts"
+},
+{
+"id": "parking",
+"title": "Parking Master",
+"icon": "🅿️",
+"cat": "ARCADE",
+"desc": "Maneuver in.",
+"engine": "parking"
+},
+{
+"id": "delivery",
+"title": "Delivery Dash",
+"icon": "📦",
+"cat": "ARCADE",
+"desc": "Pick & drop.",
+"engine": "delivery"
+},
+{
+"id": "sub",
+"title": "Sub Hunter",
+"icon": "🚤",
+"cat": "ARCADE",
+"desc": "Torpedo ships.",
+"engine": "sub"
+},
+{
+"id": "penalty",
+"title": "Penalty Shootout",
+"icon": "⚽",
+"cat": "SPORTS",
+"desc": "Beat the keeper.",
+"engine": "penalty"
+},
+{
+"id": "airhockey",
+"title": "Air Hockey",
+"icon": "🏒",
+"cat": "SPORTS",
+"desc": "First to 3.",
+"engine": "airhockey"
+},
+{
+"id": "homerun",
+"title": "Homerun Derby",
+"icon": "⚾",
+"cat": "SPORTS",
+"desc": "Swing timing.",
+"engine": "homerun"
+},
+{
+"id": "traffic",
+"title": "Traffic Control",
+"icon": "🚦",
+"cat": "ARCADE",
+"desc": "Toggle lights.",
+"engine": "traffic"
+},
+{
+"id": "atc",
+"title": "Air Traffic",
+"icon": "🛫",
+"cat": "ARCADE",
+"desc": "Clear planes.",
+"engine": "atc"
+},
+{
+"id": "plinko",
+"title": "Plinko",
+"icon": "🎯",
+"cat": "ARCADE",
+"desc": "Drop into slots.",
+"engine": "plinko"
+},
+{
+"id": "roulette",
+"title": "Roulette",
+"icon": "🎡",
+"cat": "ARCADE",
+"desc": "Red or black.",
+"engine": "roulette"
+},
+{
+"id": "blackjack",
+"title": "Blackjack",
+"icon": "🃏",
+"cat": "ARCADE",
+"desc": "Beat the dealer.",
+"engine": "blackjack"
+},
+{
+"id": "stock",
+"title": "Stock Trader",
+"icon": "📈",
+"cat": "ARCADE",
+"desc": "Buy low sell high.",
+"engine": "stock"
+},
+{
+"id": "barista",
+"title": "Barista Rush",
+"icon": "☕",
+"cat": "ARCADE",
+"desc": "Serve orders.",
+"engine": "barista"
+},
+{
+"id": "idle",
+"title": "Idle Tycoon",
+"icon": "🏭",
+"cat": "ARCADE",
+"desc": "Click & upgrade.",
+"engine": "idle"
+},
+{
+"id": "fishing",
+"title": "Fishing",
+"icon": "🎣",
+"cat": "ARCADE",
+"desc": "Cast & reel.",
+"engine": "fishing"
+},
+{
+"id": "ski",
+"title": "Ski Slalom",
+"icon": "⛷️",
+"cat": "SPORTS",
+"desc": "Race the gates.",
+"engine": "ski"
+},
+{
+"id": "burger",
+"title": "Burger Chef",
+"icon": "🍔",
+"cat": "ARCADE",
+"desc": "Stack the order.",
+"engine": "burger"
+},
+{
+"id": "horse",
+"title": "Horse Race",
+"icon": "🐎",
+"cat": "SPORTS",
+"desc": "Bet on horses.",
+"engine": "horse"
+},
+{
+"id": "p12_hill_car",
+"title": "Hill Dash",
+"icon": "🚗",
+"cat": "RACING",
+"desc": "Yakıtı topla, tepeleri aş, 600 metreyi geç.",
+"engine": "(table)"
+},
+{
+"id": "p12_hill_bmx",
+"title": "BMX Trail",
+"icon": "🚴",
+"cat": "RACING",
+"desc": "Havada takla at, gücünü yenile, patikayı bitir.",
+"engine": "(table)"
+},
+{
+"id": "p12_hill_haul",
+"title": "Yumurta Kamyonu",
+"icon": "🚚",
+"cat": "RACING",
+"desc": "Kasadaki yumurtaları kırmadan 500 metre taşı.",
+"engine": "(table)"
+},
+{
+"id": "p12_hill_tank",
+"title": "Tank Tırmanışı",
+"icon": "🪖",
+"cat": "ACTION",
+"desc": "Yoldaki kayaları topla ateşle, tankla ilerle.",
+"engine": "(table)"
+},
+{
+"id": "p12_hill_moon",
+"title": "Ay Gezgini",
+"icon": "🌙",
+"cat": "RACING",
+"desc": "Düşük yerçekimi, takla ve oksijen: Ay yüzeyini geç.",
+"engine": "(table)"
+},
+{
+"id": "p12_hill_monster",
+"title": "Canavar Ezme",
+"icon": "🦖",
+"cat": "ACTION",
+"desc": "Hurda arabaları ez, 8 arabayı parçala.",
+"engine": "(table)"
+},
+{
+"id": "p12_hill_ice",
+"title": "Buz Ralli",
+"icon": "🧊",
+"cat": "RACING",
+"desc": "Kaygan buzda yokuş aşağı kay, kontrolü kaybetme.",
+"engine": "(table)"
+}
+]

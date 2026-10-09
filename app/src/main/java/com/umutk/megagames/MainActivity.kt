@@ -31,23 +31,33 @@ import java.io.ByteArrayInputStream
 
 class MainActivity : ComponentActivity() {
     private var games by mutableStateOf<List<Game>>(emptyList())
+    private var aaa by mutableStateOf<List<Game>>(emptyList())
+    private var recent by mutableStateOf<List<String>>(emptyList())
     private var hubVisible by mutableStateOf(false)
-    private var classic by mutableStateOf(false)
     private var favs by mutableStateOf(setOf<String>())
     private val handler = android.os.Handler(android.os.Looper.getMainLooper())
     private val poll = object : Runnable {
-        override fun run() { pollHub(); handler.postDelayed(this, 450) }
+        override fun run() { pollHub(); handler.postDelayed(this, if (shown) 450 else 120) }
     }
     private lateinit var web: WebView
     private lateinit var root: FrameLayout
     private lateinit var errorView: LinearLayout
     private var failed = false
+    /** The classic HTML hub must never show before the native hub is up (it flashed for ~0.5s on start). */
+    private var shown = false
+    private var safeTopCss = 0f
+    private fun pushSafeTop() {
+        if (::web.isInitialized) web.evaluateJavascript("document.documentElement.style.setProperty('--safe-top','" + safeTopCss + "px')", null)
+    }
+    private fun reveal() { if (!shown) { shown = true; web.postDelayed({ web.animate().alpha(1f).setDuration(120).start() }, 140) } }
 
     companion object {
         const val URL = "file:///android_asset/mega.html"
+        val AAA_HUES = mapOf("blade" to 200f, "nebula" to 262f, "voxel" to 128f, "calradia" to 28f, "drift3d" to 332f, "spellmerge" to 285f, "fighter" to 188f)
         const val THREE_CDN = "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"
         const val POLL_JS = "(function(){try{var h=document.getElementById('hubScreen');var o={v:!!(h&&!h.classList.contains('hidden'))};" +
-            "if(!window.__nGames&&typeof MINIS!=='undefined'&&MINIS.length){o.g=MINIS.map(function(m,i){return{id:m.id,t:m.title,i:m.icon,c:m.cat,d:m.desc,h:m.hue||0,n:i>=128}});window.__nGames=1}" +
+            "if(!window.__nGames&&typeof MINIS!=='undefined'&&MINIS.length){o.g=MINIS.map(function(m,i){return{id:m.id,t:m.title,i:m.icon,c:m.cat,d:m.desc,h:m.hue||0,n:i>=128}});" +
+            "if(typeof AAA!=='undefined')o.a=AAA.map(function(m){return{id:m.id,t:m.title,i:m.icon,c:m.tag,d:m.desc}});window.__nGames=1}" +
             "return JSON.stringify(o)}catch(e){return '{}'}})()"
         const val BACK_JS = "(function(){try{var h=document.getElementById('hubScreen');" +
             "if(h&&h.classList.contains('hidden')&&typeof goHub==='function'){goHub();return 'back';}}catch(e){}return 'none';})()"
@@ -76,15 +86,27 @@ class MainActivity : ComponentActivity() {
         setContentView(root)
         buildErrorView()
         createWebView()
-        favs = getSharedPreferences("mega", MODE_PRIVATE).getStringSet("favs", emptySet()) ?: emptySet()
+        val prefs = getSharedPreferences("mega", MODE_PRIVATE)
+        favs = prefs.getStringSet("favs", emptySet()) ?: emptySet()
+        recent = (prefs.getString("recent", "") ?: "").split(',').filter { it.isNotBlank() }
         root.addView(ComposeView(this).apply {
             setContent {
-                if (games.isNotEmpty() && hubVisible && !classic) MegaHub(games, favs, ::play, ::toggleFav, { classic = true }, { games.randomOrNull()?.let(::play) })
+                if (games.isNotEmpty() && hubVisible) MegaHub(games, aaa, recent, favs, ::play, ::toggleFav, { games.randomOrNull()?.let(::play) })
             }
         }, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        // tell the page how much room the camera cutout / status bar takes at the top (--safe-top), so top buttons never sit under it
+        androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(root) { _, insets ->
+            val bars = insets.getInsetsIgnoringVisibility(WindowInsetsCompat.Type.systemBars()).top
+            val cut = insets.getInsets(WindowInsetsCompat.Type.displayCutout()).top
+            safeTopCss = maxOf(bars, cut) / resources.displayMetrics.density
+            pushSafeTop()
+            insets
+        }
         immersive()
+        web.alpha = 0f
         web.loadUrl(URL)
-        handler.postDelayed(poll, 600)
+        handler.postDelayed({ reveal() }, 5000) // safety net: show the page even if no games could be read
+        handler.postDelayed(poll, 150)
     }
 
     private fun buildErrorView() {
@@ -105,6 +127,7 @@ class MainActivity : ComponentActivity() {
     private fun createWebView() {
         web = WebView(this)
         web.setBackgroundColor(Color.parseColor("#0A0818"))
+        if (!shown) web.alpha = 0f
         root.addView(web, 0, ViewGroup.LayoutParams.MATCH_PARENT.let { ViewGroup.LayoutParams(it, it) })
         root.addView(errorView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         web.setLayerType(View.LAYER_TYPE_HARDWARE, null)
@@ -143,6 +166,7 @@ class MainActivity : ComponentActivity() {
                 }
                 return null
             }
+            override fun onPageFinished(view: WebView?, url: String?) { pushSafeTop() }
             override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest) = true
             override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
                 if (request.isForMainFrame) showError()
@@ -165,10 +189,17 @@ class MainActivity : ComponentActivity() {
                 val o = JSONObject(str)
                 if (o.has("v")) hubVisible = o.getBoolean("v")
                 o.optJSONArray("g")?.let { a ->
+                    reveal()
                     games = (0 until a.length()).map { i ->
                         val m = a.getJSONObject(i); val id = m.getString("id")
                         val hue = m.optDouble("h", 0.0).toFloat().let { if (it == 0f) (Math.abs(id.hashCode()) % 360).toFloat() else it }
                         Game(id, m.optString("t", id), m.optString("i", "🎮"), m.optString("c", "ARCADE"), m.optString("d", ""), hue, m.optBoolean("n"))
+                    }
+                    o.optJSONArray("a")?.let { b ->
+                        aaa = (0 until b.length()).map { i ->
+                            val m = b.getJSONObject(i); val id = m.getString("id")
+                            Game(id, m.optString("t", id), m.optString("i", "🎮"), "AAA", m.optString("d", ""), AAA_HUES[id] ?: (Math.abs(id.hashCode()) % 360).toFloat(), false, true, m.optString("c", ""))
+                        }
                     }
                 }
             } catch (_: Throwable) {}
@@ -177,7 +208,11 @@ class MainActivity : ComponentActivity() {
 
     private fun play(g: Game) {
         hubVisible = false
-        web.evaluateJavascript("(function(){var g=MINIS.find(function(m){return m.id===" + JSONObject.quote(g.id) + "});if(g)hubOpen(g)})()", null)
+        recent = (listOf(g.id) + recent.filter { it != g.id }).take(12)
+        getSharedPreferences("mega", MODE_PRIVATE).edit().putString("recent", recent.joinToString(",")).apply()
+        val js = if (g.aaa) "launchAAA(" + JSONObject.quote(g.id) + ")"
+                 else "(function(){var g=MINIS.find(function(m){return m.id===" + JSONObject.quote(g.id) + "});if(g)hubOpen(g)})()"
+        web.evaluateJavascript(js, null)
     }
 
     private fun toggleFav(g: Game) {
@@ -190,7 +225,6 @@ class MainActivity : ComponentActivity() {
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (failed) { confirmExit(); return }
-        if (classic && hubVisible) { classic = false; return }
         web.evaluateJavascript(BACK_JS) { r ->
             if (r == null || !r.contains("back")) confirmExit()
         }
