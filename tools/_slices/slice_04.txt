@@ -1,0 +1,17 @@
+fishing
+flappy
+football
+frogger
+fruitcatch
+golf
+gravity
+hangman
+hanoi
+hc_bridge
+hc_catch
+hc_chute
+hc_fill
+hc_flip
+hc_gaphop
+hc_keepup
+hc_lanes

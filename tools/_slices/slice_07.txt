@@ -1,0 +1,16 @@
+kd_pattern
+kd_rainbow
+kd_shadow
+kd_shapesort
+kd_stack
+lander
+life
+lightsout
+mancala
+mastermind
+mathblitz
+maze
+mech
+memory
+minesweeper
+missile

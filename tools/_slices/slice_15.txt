@@ -1,0 +1,16 @@
+simon
+ski
+slingshot
+snake
+sokoban
+sp_archery
+sp_bowl
+sp_catch
+sp_curling
+sp_hoops
+sp_hurdle
+sp_javelin
+sp_juggle
+sp_jumprope
+sp_keeper
+sp_penalty

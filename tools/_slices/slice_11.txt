@@ -1,0 +1,15 @@
+pz_flood
+pz_gravity
+pz_herd
+pz_lock
+pz_nono
+pz_ops
+pz_pancake
+pz_parity
+pz_pipe
+pz_ring
+pz_roll
+pz_slide
+pz_sokoban
+pz_sumpair
+pz_symm

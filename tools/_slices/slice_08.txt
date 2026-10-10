@@ -1,0 +1,14 @@
+nightswarm
+numberorder
+othello
+p10_sort
+p11_survivor
+p13_bj
+p13_quiz
+p13_wordle
+p14_
+p1_bombmaze
+p1_centipede
+p1_crossing
+p1_dig
+p1_galaga

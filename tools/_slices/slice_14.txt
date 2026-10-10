@@ -1,0 +1,15 @@
+sim_crane
+sim_dock
+sim_drive
+sim_fork
+sim_glide
+sim_hoops
+sim_hpipe
+sim_maze
+sim_orbit
+sim_rail
+sim_range
+sim_roll
+sim_swing
+sim_tower
+sim_tunnel

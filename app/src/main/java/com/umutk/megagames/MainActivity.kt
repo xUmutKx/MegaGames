@@ -114,7 +114,7 @@ class MainActivity : ComponentActivity() {
             orientation = LinearLayout.VERTICAL; gravity = Gravity.CENTER
             setBackgroundColor(Color.parseColor("#0A0818")); visibility = View.GONE
             addView(TextView(context).apply {
-                text = "Yükleme hatası"; setTextColor(Color.WHITE); textSize = 22f; gravity = Gravity.CENTER
+                text = "Loading error"; setTextColor(Color.WHITE); textSize = 22f; gravity = Gravity.CENTER
             })
             addView(Button(context).apply {
                 text = "Tekrar dene"
@@ -231,9 +231,9 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun confirmExit() {
-        AlertDialog.Builder(this).setTitle("MEGA GAME").setMessage("Uygulamadan çıkılsın mı?")
-            .setPositiveButton("Çık") { _, _ -> finish() }
-            .setNegativeButton("Kal", null).show()
+        AlertDialog.Builder(this).setTitle("MEGA GAME").setMessage("Exit the app?")
+            .setPositiveButton("Exit") { _, _ -> finish() }
+            .setNegativeButton("Stay", null).show()
     }
 
     private fun immersive() {

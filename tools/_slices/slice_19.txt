@@ -1,0 +1,16 @@
+ttt
+village
+watersort
+wd_anagram
+wd_cross
+wd_drop
+wd_emoji
+wd_ladder
+wd_missing
+wd_rhyme
+wd_sort
+wd_typing
+wd_wsearch
+whack
+wordsearch
+zone

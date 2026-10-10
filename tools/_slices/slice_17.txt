@@ -1,0 +1,15 @@
+st2_mix
+st2_odometer
+st2_pour
+st2_simon
+st2_slice
+st2_sorter
+st2_tangle
+st2_zip
+st_beads
+st_bubble
+st_clicky
+st_dial
+st_jelly
+st_magnet
+st_rhythm
