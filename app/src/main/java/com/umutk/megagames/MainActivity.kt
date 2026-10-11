@@ -18,6 +18,7 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.ComponentActivity
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -35,6 +36,8 @@ class MainActivity : ComponentActivity() {
     private var recent by mutableStateOf<List<String>>(emptyList())
     private var hubVisible by mutableStateOf(false)
     private var favs by mutableStateOf(setOf<String>())
+    /** Kept here (not inside MegaHub) so the list keeps its scroll while a game is open and the hub leaves composition. */
+    private val gridState = LazyGridState()
     private val handler = android.os.Handler(android.os.Looper.getMainLooper())
     private val poll = object : Runnable {
         override fun run() { pollHub(); handler.postDelayed(this, if (shown) 450 else 120) }
@@ -55,8 +58,9 @@ class MainActivity : ComponentActivity() {
         const val URL = "file:///android_asset/mega.html"
         val AAA_HUES = mapOf("blade" to 200f, "nebula" to 262f, "voxel" to 128f, "calradia" to 28f, "drift3d" to 332f, "spellmerge" to 285f, "fighter" to 188f)
         const val THREE_CDN = "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"
+        // k = list rank: 2 for the pseudo-3D sims (sim_*, s4_*, n08_horizon), 0 otherwise; the grid sorts by it (stable)
         const val POLL_JS = "(function(){try{var h=document.getElementById('hubScreen');var o={v:!!(h&&!h.classList.contains('hidden'))};" +
-            "if(!window.__nGames&&typeof MINIS!=='undefined'&&MINIS.length){o.g=MINIS.map(function(m,i){return{id:m.id,t:m.title,i:m.icon,c:m.cat,d:m.desc,h:m.hue||0,n:i>=128}});" +
+            "if(!window.__nGames&&typeof MINIS!=='undefined'&&MINIS.length){o.g=MINIS.map(function(m,i){return{id:m.id,t:m.title,i:m.icon,c:m.cat,d:m.desc,h:m.hue||0,n:i>=128,k:/^(sim_|s4_)|^n08_horizon$/.test(m.id)?2:0}});" +
             "if(typeof AAA!=='undefined')o.a=AAA.map(function(m){return{id:m.id,t:m.title,i:m.icon,c:m.tag,d:m.desc}});window.__nGames=1}" +
             "return JSON.stringify(o)}catch(e){return '{}'}})()"
         const val BACK_JS = "(function(){try{var h=document.getElementById('hubScreen');" +
@@ -64,6 +68,10 @@ class MainActivity : ComponentActivity() {
     }
 
     inner class Bridge {
+        /** Called by the page's goHub(): show the native hub at once, before the 450 ms poll would notice the close. */
+        @JavascriptInterface
+        fun hubShown() { runOnUiThread { hubVisible = true } }
+
         @JavascriptInterface
         fun vibrate(ms: Int) {
             try {
@@ -91,7 +99,7 @@ class MainActivity : ComponentActivity() {
         recent = (prefs.getString("recent", "") ?: "").split(',').filter { it.isNotBlank() }
         root.addView(ComposeView(this).apply {
             setContent {
-                if (games.isNotEmpty() && hubVisible) MegaHub(games, aaa, recent, favs, ::play, ::toggleFav, { games.randomOrNull()?.let(::play) })
+                if (games.isNotEmpty() && hubVisible) MegaHub(games, aaa, recent, favs, gridState, ::play, ::toggleFav, { games.randomOrNull()?.let(::play) })
             }
         }, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         // tell the page how much room the camera cutout / status bar takes at the top (--safe-top), so top buttons never sit under it
@@ -193,8 +201,8 @@ class MainActivity : ComponentActivity() {
                     games = (0 until a.length()).map { i ->
                         val m = a.getJSONObject(i); val id = m.getString("id")
                         val hue = m.optDouble("h", 0.0).toFloat().let { if (it == 0f) (Math.abs(id.hashCode()) % 360).toFloat() else it }
-                        Game(id, m.optString("t", id), m.optString("i", "🎮"), m.optString("c", "ARCADE"), m.optString("d", ""), hue, m.optBoolean("n"))
-                    }
+                        Game(id, m.optString("t", id), m.optString("i", "🎮"), m.optString("c", "ARCADE"), m.optString("d", ""), hue, m.optBoolean("n"), rank = m.optInt("k"))
+                    }.sortedByDescending { it.rank }
                     o.optJSONArray("a")?.let { b ->
                         aaa = (0 until b.length()).map { i ->
                             val m = b.getJSONObject(i); val id = m.getString("id")
@@ -207,12 +215,14 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun play(g: Game) {
+        // hide the page while the hub goes away and the game is launched, so the previous page never shows
+        web.alpha = 0f
         hubVisible = false
         recent = (listOf(g.id) + recent.filter { it != g.id }).take(12)
         getSharedPreferences("mega", MODE_PRIVATE).edit().putString("recent", recent.joinToString(",")).apply()
         val js = if (g.aaa) "launchAAA(" + JSONObject.quote(g.id) + ")"
                  else "(function(){var g=MINIS.find(function(m){return m.id===" + JSONObject.quote(g.id) + "});if(g)hubOpen(g)})()"
-        web.evaluateJavascript(js, null)
+        web.evaluateJavascript(js) { web.postDelayed({ web.animate().alpha(1f).setDuration(120).start() }, 60) }
     }
 
     private fun toggleFav(g: Game) {

@@ -1,18 +1,12 @@
-<vector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:aapt="http://schemas.android.com/aapt"
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
-    <!-- grid cards -->
-    <path android:pathData="M30,26h20a4,4 0,0 1,4 4v14a4,4 0,0 1,-4 4h-20a4,4 0,0 1,-4 -4v-14a4,4 0,0 1,4 -4z">
-        <aapt:attr name="android:fillColor"><gradient android:startX="26" android:startY="26" android:endX="54" android:endY="48" android:startColor="#FF2BD6" android:endColor="#FF8A3D" /></aapt:attr></path>
-    <path android:pathData="M58,26h20a4,4 0,0 1,4 4v14a4,4 0,0 1,-4 4h-20a4,4 0,0 1,-4 -4v-14a4,4 0,0 1,4 -4z">
-        <aapt:attr name="android:fillColor"><gradient android:startX="54" android:startY="26" android:endX="82" android:endY="48" android:startColor="#00E5FF" android:endColor="#3D7BFF" /></aapt:attr></path>
-    <!-- gamepad body -->
-    <path android:pathData="M34,54h40c7,0 12,5 13,12l1,8c0.6,4 -3,7 -6,5l-8,-5h-30l-8,5c-3,2 -6.6,-1 -6,-5l1,-8c1,-7 6,-12 13,-12z">
-        <aapt:attr name="android:fillColor"><gradient android:startX="22" android:startY="54" android:endX="86" android:endY="84" android:startColor="#B6FF3D" android:centerColor="#27F5A0" android:endColor="#00C2FF" /></aapt:attr></path>
-    <!-- highlight -->
-    <path android:pathData="M34,56h40c3,0 6,1 8,3c-2,-0.8 -4,-1 -6,-1h-44c-2,0 -4,0.3 -6,1c2,-2 5,-3 8,-3z" android:fillColor="#80FFFFFF" />
-    <!-- dpad -->
-    <path android:pathData="M37,63h3v3h3v3h-3v3h-3v-3h-3v-3h3z" android:fillColor="#0A0818" />
-    <!-- buttons -->
-    <path android:pathData="M68,64m-2.6,0a2.6,2.6 0,1 1,5.2 0a2.6,2.6 0,1 1,-5.2 0" android:fillColor="#FF2BD6" />
-    <path android:pathData="M74,69m-2.6,0a2.6,2.6 0,1 1,5.2 0a2.6,2.6 0,1 1,-5.2 0" android:fillColor="#0A0818" />
+    <!-- gamepad body: one rounded shape -->
+    <path android:fillColor="#27F5A0"
+        android:pathData="M40,36 H68 A16,16 0 0 1 84,52 V56 A16,16 0 0 1 68,72 H40 A16,16 0 0 1 24,56 V52 A16,16 0 0 1 40,36 Z" />
+    <!-- d-pad -->
+    <path android:fillColor="#0A0818"
+        android:pathData="M32,50 H36 V46 H40 V50 H44 V54 H40 V58 H36 V54 H32 Z" />
+    <!-- two buttons -->
+    <path android:fillColor="#FF2BD6" android:pathData="M73,48 a3,3 0 1 0 6,0 a3,3 0 1 0 -6,0 Z" />
+    <path android:fillColor="#00C2FF" android:pathData="M73,58 a3,3 0 1 0 6,0 a3,3 0 1 0 -6,0 Z" />
 </vector>

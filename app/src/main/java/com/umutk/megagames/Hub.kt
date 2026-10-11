@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
@@ -40,7 +41,7 @@ import androidx.compose.ui.unit.sp
 /** A game from the HTML: a minigame (MINIS) or one of the big AAA modules. */
 data class Game(
     val id: String, val title: String, val icon: String, val cat: String, val desc: String,
-    val hue: Float, val fresh: Boolean, val aaa: Boolean = false, val tag: String = ""
+    val hue: Float, val fresh: Boolean, val aaa: Boolean = false, val tag: String = "", val rank: Int = 0
 )
 
 private val Scheme = darkColorScheme(
@@ -123,6 +124,7 @@ private fun cap(s: String) = s.lowercase().replaceFirstChar { it.uppercase() }
 @Composable
 fun MegaHub(
     games: List<Game>, aaa: List<Game>, recent: List<String>, favs: Set<String>,
+    gridState: LazyGridState, // owned by MainActivity so the scroll survives leaving the hub for a game
     onPlay: (Game) -> Unit, onFav: (Game) -> Unit, onRandom: () -> Unit
 ) {
     MaterialTheme(colorScheme = Scheme) {
@@ -144,7 +146,7 @@ fun MegaHub(
 
         Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
             LazyVerticalGrid(
-                GridCells.Adaptive(160.dp), Modifier.fillMaxSize().statusBarsPadding(),
+                GridCells.Adaptive(160.dp), Modifier.fillMaxSize().statusBarsPadding(), state = gridState,
                 contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 24.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp), verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {

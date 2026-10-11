@@ -480,5 +480,9 @@ window.__AG_bigB = (function () {
       if (e.el) text({ swift: "Swift", brutal: "Brutal", vamp: "Vampiric", volatile: "Volatile" }[e.aff] + " " + EN[e.ty].n, ex, ey - r - 13, 10, "#ffd15c", "center", 800);
     }
   };
-
-/*@@NEXT@@*/
+  return {
+    engines: {},
+    minis: [],
+    aaa: [{ id: "dungeon", icon: "⚔️", title: "Dungeon Delvers", tag: "AAA • ROGUELIKE", desc: "Pick a hero, delve a procedural dungeon, loot gear, unlock perks and slay the guardian of each floor.", mod: DD }]
+  };
+})();

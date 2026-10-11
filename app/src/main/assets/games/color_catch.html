@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>Color Catch</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #0b0a16; overflow: hidden; touch-action: none; font-family: sans-serif; color: #fff; }
+  canvas { display: block; width: 100%; height: 100%; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+(() => {
+  const cv = document.getElementById('c');
+  const ctx = cv.getContext('2d');
+  const COLORS = ['#27f5a0', '#ff2bd6', '#00c2ff', '#ffb347'];
+  let W = 0, H = 0, paddleX, drops, score, lives, state, spawnT, time, best = +(localStorage.getItem('catchBest') || 0), pad = 0, lastHit = null;
+
+  function resize() {
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    W = innerWidth; H = innerHeight;
+    cv.width = W * dpr; cv.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  addEventListener('resize', resize);
+
+  // Drops fall in one of four colours. The catcher is a ring that takes the colour of the drop it caught last.
+  // Catch a matching colour for points, a wrong colour costs a life. Left/right half of the screen moves it.
+  let ringColor = 0, dir = 0;
+  function setDir(e) {
+    const x = e.clientX;
+    dir = x < W / 2 ? -1 : 1;
+  }
+  cv.addEventListener('pointerdown', e => { e.preventDefault(); if (state !== 'play') { reset(); return; } setDir(e); });
+  cv.addEventListener('pointermove', e => { if (e.buttons) setDir(e); });
+  cv.addEventListener('pointerup', () => { dir = 0; });
+  cv.addEventListener('pointercancel', () => { dir = 0; });
+  addEventListener('keydown', e => {
+    if (e.code === 'ArrowLeft') dir = -1; if (e.code === 'ArrowRight') dir = 1;
+    if (e.code === 'Space' && state !== 'play') reset();
+  });
+  addEventListener('keyup', e => { if (e.code === 'ArrowLeft' || e.code === 'ArrowRight') dir = 0; });
+
+  function reset() {
+    paddleX = W / 2; drops = []; score = 0; lives = 3; state = 'play'; spawnT = 0; time = 0; ringColor = 0; lastHit = null;
+  }
+
+  function spawn() {
+    drops.push({ x: 30 + Math.random() * (W - 60), y: -20, c: Math.floor(Math.random() * COLORS.length), v: (H * 0.22) + time * 4 + Math.random() * H * 0.08 });
+  }
+
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.033, (now - last) / 1000); last = now;
+    if (state === 'play') {
+      time += dt;
+      const speed = W * 0.9;
+      paddleX = Math.max(40, Math.min(W - 40, paddleX + dir * speed * dt));
+      spawnT -= dt;
+      if (spawnT <= 0) { spawn(); spawnT = Math.max(0.45, 1.1 - time * 0.015); }
+      const padY = H * 0.86;
+      for (const d of drops) {
+        d.y += d.v * dt;
+        if (!d.done && d.y > padY - 14 && d.y < padY + 22 && Math.abs(d.x - paddleX) < 46) {
+          d.done = true;
+          if (d.c === ringColor) { score++; } else { lives--; if (lives <= 0) end(); }
+          ringColor = d.c; lastHit = { t: time, ok: d.c === ringColor };
+        } else if (!d.done && d.y > H + 20) {
+          d.done = true;
+        }
+      }
+      drops = drops.filter(d => !d.done);
+    }
+    draw();
+    requestAnimationFrame(frame);
+  }
+
+  function end() {
+    state = 'over';
+    if (score > best) { best = score; try { localStorage.setItem('catchBest', best); } catch (e) {} }
+  }
+
+  function draw() {
+    ctx.fillStyle = '#0b0a16'; ctx.fillRect(0, 0, W, H);
+    const padY = H * 0.86;
+    for (const d of drops) {
+      ctx.fillStyle = COLORS[d.c];
+      ctx.beginPath(); ctx.arc(d.x, d.y, Math.max(12, W * 0.035), 0, 7); ctx.fill();
+    }
+    // catcher ring in the colour it wants next
+    ctx.strokeStyle = COLORS[ringColor]; ctx.lineWidth = 8; ctx.lineCap = 'round';
+    ctx.shadowColor = COLORS[ringColor]; ctx.shadowBlur = 16;
+    ctx.beginPath(); ctx.moveTo(paddleX - 46, padY); ctx.lineTo(paddleX + 46, padY); ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    ctx.textAlign = 'center'; ctx.fillStyle = '#fff';
+    ctx.font = `bold ${Math.round(H * 0.05)}px sans-serif`;
+    ctx.fillText(score, W / 2, H * 0.1);
+    ctx.font = `${Math.round(H * 0.022)}px sans-serif`;
+    ctx.fillStyle = '#9d95c9';
+    ctx.fillText('lives ' + lives + '   ·   best ' + best, W / 2, H * 0.1 + H * 0.04);
+
+    if (state === 'over') {
+      ctx.fillStyle = 'rgba(0,0,0,.6)'; ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = '#fff'; ctx.font = `bold ${Math.round(H * 0.05)}px sans-serif`;
+      ctx.fillText('Tap to try again', W / 2, H / 2);
+    }
+  }
+
+  resize(); reset();
+  requestAnimationFrame(t => { last = t; frame(t); });
+})();
+</script>
+</body>
+</html>
