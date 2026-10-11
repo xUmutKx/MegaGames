@@ -1,5 +1,5 @@
 """Merge tools/agents/*.js (window.__AG_<name> IIFEs) into assets/mega.html. Idempotent: replaces the previous block."""
-import glob, os, re, sys
+import glob, os, re, subprocess, sys
 D = '/root/projects/MegaGames'
 P = D + '/app/src/main/assets/mega.html'
 html = open(P, encoding='utf-8').read()
@@ -13,6 +13,8 @@ for f in files:
     m = re.search(r'window\.__AG_(\w+)\s*=', src)
     if not m:
         print('skip (no __AG_):', f); continue
+    if subprocess.run(['node', '--check', f], capture_output=True).returncode:
+        print('skip (syntax error, truncated agent file):', f); continue
     names.append(m.group(1))
     blocks.append('/* --- agent: %s --- */\n%s\n' % (m.group(1), src))
 print('merging:', names)

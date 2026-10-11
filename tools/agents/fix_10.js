@@ -211,7 +211,7 @@ window.__AG_fix_10 = (function () {
           const vn = b.vx * nx + b.vy * ny;
           if (vn < 0) {
             b.vx -= (1 + E) * vn * nx; b.vy -= (1 + E) * vn * ny;
-            b.vx = (Math.random() < .5 ? -1 : 1) * rand(100, 140); // every peg is a coin flip, so drops never stack on one line
+            b.vx += (Math.random() < .5 ? -1 : 1) * rand(40, 70); // each peg is a coin flip; drop point still matters
             if (-vn > 220) fxBurst(parts, p.x, p.y, C.gold, 3, 70);
             if (-vn > 150) beep(900 + rand(0, 200), 700, .03, "triangle", .06);
           }
@@ -401,7 +401,7 @@ window.__AG_fix_10 = (function () {
     engines: { pool: gamePool, plinko: gamePlinko, parking: gameParking },
     minis: [
       { id: "pool", title: "8-Ball Pool", icon: "🎱", cat: "SPORTS", desc: "Real table: pockets, rail bounces and scratches. Sink 4 balls in 16 shots.", engine: "pool", goal: 4 },
-      { id: "plinko", title: "Plinko", icon: "🎯", cat: "ARCADE", desc: "Aim the drop through the peg board. Edge slots pay the most; 12 balls.", engine: "plinko", goal: 150 },
+      { id: "plinko", title: "Plinko", icon: "🎯", cat: "ARCADE", desc: "Aim the drop through the peg board. Edge slots pay the most; 12 balls, 180 points.", engine: "plinko", goal: 180 },
       { id: "parking", title: "Parking Master", icon: "🅿️", cat: "ARCADE", desc: "Park nose-in or side-on between parked cars, 45 seconds per bay, no bumps.", engine: "parking", goal: 3 }
     ],
     aaa: []
