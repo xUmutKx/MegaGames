@@ -40341,6 +40341,1154 @@ const Bastion={
  destroy(){this.a=false}
 };
 
+/* ============ AAA: GRAVITY FLIP ============ */
+const Gravity={
+ a:false,
+ R:14,
+ init(){this.a=true;this.hi=0;try{this.hi=+localStorage.getItem("gflipHi")||0}catch(e){}this.reset();hudTitle("GRAVITY FLIP","Tap to flip gravity")},
+ reset(){this.p={y:null,side:1};this.state="ready";this.t=0;this.dead=0;this.dist=0;this.coins=0;this.score=0;this.newHi=false;
+  this.spd=280;this.nextSpike=1.2;this.nextCoin=.6;this.obs=[];this.gold=[];this.shake=0},
+ lanes(){const w=W(),h=H(),m=Math.max(96,h*.2);return{top:m,bot:h-m,w,h}},
+ surf(L,side){return side===1?L.bot-this.R:L.top+this.R},
+ px(){return W()*.25},
+ sfx(k){try{if(k==="flip")beep(520,880,.08,"triangle",.06);else if(k==="coin")beep(980,1400,.05,"sine",.05);else if(k==="die")beep(300,60,.35,"sawtooth",.1)}catch(e){}},
+ pointer(){
+  if(this.state==="ready"){this.state="play";return}
+  if(this.state==="play"){this.p.side*=-1;this.sfx("flip");return}
+  if(this.state==="dead"&&this.dead>.7){this.reset();this.state="play"}},
+ die(){
+  this.state="dead";this.dead=0;this.shake=1;this.sfx("die");
+  if(this.score>this.hi){this.hi=this.score;this.newHi=true;try{localStorage.setItem("gflipHi",String(this.hi))}catch(e){}}},
+ update(dt){
+  const L=this.lanes();
+  if(this.p.y==null)this.p.y=this.surf(L,this.p.side);
+  this.t+=dt;
+  if(this.state==="ready")return;
+  if(this.state==="dead"){this.dead+=dt;this.shake=Math.max(0,this.shake-dt*2);return}
+  const tgt=this.surf(L,this.p.side);
+  this.p.y+=(tgt-this.p.y)*Math.min(1,dt*16);
+  this.spd=Math.min(620,280+this.dist*.02);
+  const s=this.spd;
+  this.dist+=s*dt;
+  for(const o of this.obs)o.x-=s*dt;
+  for(const k of this.gold)k.x-=s*dt;
+  this.obs=this.obs.filter(o=>o.x>-40);
+  this.gold=this.gold.filter(k=>!k.got&&k.x>-40);
+  this.nextSpike-=dt;
+  if(this.nextSpike<=0){this.obs.push({x:L.w+30,side:Math.random()<.5?1:-1,w:34,h:42});this.nextSpike=rand(.9,1.4)}
+  this.nextCoin-=dt;
+  if(this.nextCoin<=0){this.gold.push({x:L.w+30,side:Math.random()<.5?1:-1});this.nextCoin=rand(.5,1.1)}
+  const px=this.px(),py=this.p.y,ps=this.p.side;
+  for(const o of this.obs){
+   if(o.side===ps&&o.x-17<px+12&&o.x+17>px-12&&Math.abs(py-this.surf(L,ps))<18){this.die();return}}
+  for(const k of this.gold){
+   if(!k.got&&k.side===ps&&Math.abs(k.x-px)<24){k.got=true;this.coins++;this.sfx("coin")}}
+  this.score=Math.floor(this.dist/10)+this.coins*5},
+ draw(){
+  const L=this.lanes(),w=L.w,h=L.h,c=ctx2d;
+  if(this.p.y==null)this.p.y=this.surf(L,this.p.side);
+  c.save();
+  if(this.shake>0)c.translate(rand(-6,6)*this.shake,rand(-6,6)*this.shake);
+  const bg=c.createLinearGradient(0,0,0,h);bg.addColorStop(0,"#0b0720");bg.addColorStop(1,"#1d0b3a");
+  c.fillStyle=bg;c.fillRect(-10,-10,w+20,h+20);
+  c.strokeStyle="#55e6ff";c.lineWidth=3;c.shadowColor="#55e6ff";c.shadowBlur=14;
+  c.beginPath();c.moveTo(0,L.top);c.lineTo(w,L.top);c.moveTo(0,L.bot);c.lineTo(w,L.bot);c.stroke();c.shadowBlur=0;
+  c.fillStyle="#ff4fd8";
+  for(const o of this.obs){
+   const base=o.side===1?L.bot:L.top;
+   c.beginPath();c.moveTo(o.x-17,base);c.lineTo(o.x,base-o.side*o.h);c.lineTo(o.x+17,base);c.closePath();c.fill()}
+  c.shadowColor="#ffd15c";c.shadowBlur=12;c.fillStyle="#ffd15c";
+  for(const k of this.gold){
+   if(k.got)continue;
+   const y=k.side===1?L.bot-this.R-14:L.top+this.R+14;
+   c.beginPath();c.arc(k.x,y,7+Math.sin(this.t*6+k.x)*1,0,6.283);c.fill()}
+  c.shadowBlur=0;
+  c.shadowColor=this.state==="dead"?"#ff5577":"#55e6ff";c.shadowBlur=22;
+  c.fillStyle=this.state==="dead"?"#ff5577":"#55e6ff";
+  c.beginPath();c.arc(this.px(),this.p.y,12,0,6.283);c.fill();
+  c.shadowBlur=0;
+  c.restore();
+  text(String(this.score),w/2,L.top-30,22,"#fff","center",900);
+  text("BEST "+this.hi,w/2,L.top-10,12,"#aab","center",800);
+  if(this.state==="ready")text("TAP TO FLIP GRAVITY",w/2,h/2,18,"#55e6ff","center",900);
+  if(this.state==="dead"){
+   text("CRASHED",w/2,h/2-18,30,"#ff5577","center",900);
+   text(this.newHi?"NEW BEST!":"Score "+this.score,w/2,h/2+16,15,this.newHi?"#ffd15c":"#ccd","center",800);
+   if(this.dead>.7)text("TAP TO RETRY",w/2,h/2+48,16,"#55e6ff","center",900)}},
+ destroy(){this.a=false}
+};
+
+/* ============ RELAX: BUBBLE WRAP ============ */
+const BubbleWrap={
+ a:false,
+ S:46,
+ init(){this.a=true;this.reset();hudTitle("BUBBLE WRAP","Tap a bubble to pop it")},
+ reset(){this.pops=0;this.wait=0;this.fill()},
+ fill(){
+  const w=W(),h=H(),S=this.S;
+  this.cols=Math.max(3,Math.floor((w-16)/S));
+  this.rows=Math.max(3,Math.floor((h-120)/S));
+  this.ox=(w-this.cols*S)/2+S/2;this.oy=(h-this.rows*S)/2+S/2;
+  this.b=[];
+  for(let r=0;r<this.rows;r++)for(let c=0;c<this.cols;c++)this.b.push({x:this.ox+c*S,y:this.oy+r*S,up:true,k:0});
+ },
+ pointer(px,py){
+  const q=cv2d.getBoundingClientRect(),x=px-q.left,y=py-q.top;
+  let best=null,bd=this.S*.5;
+  for(const b of this.b){
+   if(!b.up)continue;
+   const d=Math.hypot(b.x-x,b.y-y);
+   if(d<bd){bd=d;best=b}
+  }
+  if(!best)return;
+  best.up=false;this.pops++;
+  beep(700+rand(0,300),400,.05,"triangle",.05);
+ },
+ update(dt){
+  for(const b of this.b)if(!b.up)b.k=Math.min(1,b.k+dt*6);
+  // refill the sheet a moment after it is fully popped
+  if(this.b.every(b=>!b.up)){this.wait+=dt;if(this.wait>1.2){this.wait=0;this.fill()}}
+  else this.wait=0;
+ },
+ draw(){
+  const c=ctx2d,w=W(),h=H(),R=this.S*.42;
+  c.fillStyle="#e9f4ff";c.fillRect(0,0,w,h);
+  for(const b of this.b){
+   if(b.up){
+    const g=c.createRadialGradient(b.x-6,b.y-6,2,b.x,b.y,R);
+    g.addColorStop(0,"#ffffff");g.addColorStop(1,"#9fd3ff");
+    c.fillStyle=g;c.beginPath();c.arc(b.x,b.y,R,0,6.283);c.fill();
+   }else{
+    c.fillStyle="rgba(120,170,220,"+(0.28-b.k*.1)+")";
+    c.beginPath();c.arc(b.x,b.y,R*(1+b.k*.15),0,6.283);c.fill();
+   }
+  }
+  text("POPPED "+this.pops,w/2,h-40,16,"#345","center",800);
+  if(this.wait>0)text("More wrap coming...",w/2,h-18,12,"#567","center",700);
+ },
+ destroy(){this.a=false}
+};
+
+/* ============ RELAX: SAND GARDEN ============ */
+const SandGarden={
+ a:false,
+ init(){this.a=true;this.reset();hudTitle("SAND GARDEN","Tap to place a stone in the sand")},
+ reset(){this.stones=[];this.t=0},
+ pointer(px,py){
+  const q=cv2d.getBoundingClientRect(),x=px-q.left,y=py-q.top;
+  if(this.stones.length>=14)this.stones.shift();
+  this.stones.push({x,y,r:rand(22,34),s:0});
+  beep(180,240,.12,"sine",.04);
+ },
+ update(dt){
+  this.t+=dt;
+  for(const s of this.stones)s.s=Math.min(1,s.s+dt*3);
+ },
+ draw(){
+  const c=ctx2d,w=W(),h=H();
+  c.fillStyle="#efe3c4";c.fillRect(0,0,w,h);
+  c.strokeStyle="rgba(120,95,60,.45)";c.lineWidth=1.6;
+  // every rake line bends around the stones, like sand pushed aside
+  for(let y0=20;y0<h;y0+=18){
+   c.beginPath();
+   for(let x=0;x<=w;x+=8){
+    let px=x,py=y0;
+    for(const s of this.stones){
+     const dx=px-s.x,dy=py-s.y,d=Math.hypot(dx,dy),R=s.r*2.2;
+     if(d<R&&d>0){const k=(R-d)*.9*s.s/d;px+=dx*k;py+=dy*k}
+    }
+    if(x===0)c.moveTo(px,py);else c.lineTo(px,py);
+   }
+   c.stroke();
+  }
+  for(const s of this.stones){
+   const g=c.createRadialGradient(s.x-s.r*.3,s.y-s.r*.3,s.r*.1,s.x,s.y,s.r);
+   g.addColorStop(0,"#d9dce2");g.addColorStop(1,"#6f727a");
+   c.fillStyle=g;c.globalAlpha=s.s;
+   c.beginPath();c.arc(s.x,s.y,s.r*(.6+.4*s.s),0,6.283);c.fill();
+  }
+  c.globalAlpha=1;
+ },
+ destroy(){this.a=false}
+};
+
+/* ============ RELAX: FIDGET SPINNER ============ */
+const FidgetSpin={
+ a:false,
+ init(){this.a=true;this.reset();hudTitle("FIDGET SPINNER","Tap left to spin back, right to spin on")},
+ reset(){this.ang=0;this.w=0;this.turns=0},
+ pointer(px){
+  const q=cv2d.getBoundingClientRect(),x=px-q.left;
+  // a tap on the left turns it counter-clockwise, on the right clockwise
+  const dir=x<W()/2?-1:1;
+  this.w=Math.max(-40,Math.min(40,this.w+dir*rand(7,10)));
+  beep(400,600,.04,"triangle",.03);
+ },
+ update(dt){
+  this.ang+=this.w*dt;
+  this.w*=Math.exp(-dt*.7);
+  if(Math.abs(this.w)<.02)this.w=0;
+  this.turns=Math.floor(Math.abs(this.ang)/6.283);
+ },
+ draw(){
+  const c=ctx2d,w=W(),h=H(),cx=w/2,cy=h/2,R=Math.min(w,h)*.3;
+  c.fillStyle="#1b2233";c.fillRect(0,0,w,h);
+  c.save();c.translate(cx,cy);c.rotate(this.ang);
+  // three lobes, each with a hole, drawn by rotating the frame
+  for(let i=0;i<3;i++){
+   if(i)c.rotate(2.094);
+   const g=c.createLinearGradient(-R*.2,-R*.2,R*.2,R*.2);
+   g.addColorStop(0,"#b9ecff");g.addColorStop(1,"#4aa8e0");
+   c.fillStyle=g;
+   c.beginPath();c.arc(R*.62,0,R*.42,0,6.283);c.fill();
+   c.fillStyle="#1b2233";
+   c.beginPath();c.arc(R*.62,0,R*.14,0,6.283);c.fill();
+  }
+  c.restore();
+  // centre bearing
+  const g=c.createRadialGradient(cx-4,cy-4,2,cx,cy,R*.2);
+  g.addColorStop(0,"#fff3b0");g.addColorStop(1,"#d89b2b");
+  c.fillStyle=g;c.beginPath();c.arc(cx,cy,R*.2,0,6.283);c.fill();
+  text(this.turns+" TURNS",cx,h-60,18,"#cfe9ff","center",800);
+ },
+ destroy(){this.a=false}
+};
+
+/* ============ RELAX: SLIME STRETCH ============ */
+const SlimeStretch={
+ a:false,
+ N:20,
+ init(){this.a=true;this.reset();hudTitle("SLIME STRETCH","Tap to poke the slime and watch it wobble")},
+ reset(){
+  const w=W(),h=H();
+  this.cx=w/2;this.cy=h/2;this.R=Math.min(w,h)*.18;this.t=0;
+  this.n=[];
+  for(let i=0;i<this.N;i++)this.n.push({d:0,v:0,a:i/this.N*6.283});
+ },
+ pointer(px,py){
+  const q=cv2d.getBoundingClientRect(),x=px-q.left,y=py-q.top;
+  const ta=Math.atan2(y-this.cy,x-this.cx);
+  // nodes facing the tap get pushed out, the rest follow through the springs
+  for(const n of this.n){
+   let df=n.a-ta;df=Math.atan2(Math.sin(df),Math.cos(df));
+   const b=Math.max(0,Math.cos(df));
+   n.v+=b*b*b*b*300;
+  }
+  beep(260,190,.15,"sine",.05);
+ },
+ update(dt){
+  this.t+=dt;
+  const R=this.R;
+  for(const n of this.n){
+   n.v+=(-60*n.d-4*n.v)*dt;
+   n.d+=n.v*dt;
+   n.d=Math.max(-R*.5,Math.min(R*1.2,n.d));
+  }
+  // neighbours pull on each other so the blob reads as one body
+  const N=this.N,old=this.n.map(n=>n.d);
+  for(let i=0;i<N;i++){
+   const p=old[(i+N-1)%N],q=old[(i+1)%N];
+   this.n[i].d+=((p+q)/2-old[i])*Math.min(1,dt*8);
+  }
+ },
+ draw(){
+  const c=ctx2d,w=W(),h=H(),R=this.R;
+  c.fillStyle="#2a1442";c.fillRect(0,0,w,h);
+  const P=this.n.map(n=>{
+   const r=R+n.d+Math.sin(this.t*2+n.a*3)*2;
+   return [this.cx+Math.cos(n.a)*r,this.cy+Math.sin(n.a)*r];
+  });
+  const N=P.length;
+  c.beginPath();
+  for(let i=0;i<=N;i++){
+   const p=P[i%N],q=P[(i+1)%N];
+   const mx=(p[0]+q[0])/2,my=(p[1]+q[1])/2;
+   if(i===0)c.moveTo(mx,my);else c.quadraticCurveTo(p[0],p[1],mx,my);
+  }
+  c.closePath();
+  const g=c.createRadialGradient(this.cx-R*.3,this.cy-R*.3,4,this.cx,this.cy,R*1.6);
+  g.addColorStop(0,"#b8ff9e");g.addColorStop(1,"#2fbf71");
+  c.fillStyle=g;c.shadowColor="#7dffb0";c.shadowBlur=18;c.fill();c.shadowBlur=0;
+  c.fillStyle="rgba(255,255,255,.35)";
+  c.beginPath();c.arc(this.cx-R*.35,this.cy-R*.35,R*.22,0,6.283);c.fill();
+ },
+ destroy(){this.a=false}
+};
+
+/* ============ RELAX: ZEN RIPPLE ============ */
+const ZenRipple={
+ a:false,
+ MAX:300,
+ init(){this.a=true;this.reset();hudTitle("ZEN RIPPLE","Tap the water to make ripples")},
+ reset(){this.rings=[];this.t=0;this.auto=rand(.5,1.5)},
+ spawn(x,y,k){
+  this.rings.push({x,y,r:0,k});
+  if(this.rings.length>40)this.rings.shift();
+ },
+ pointer(px,py){
+  const q=cv2d.getBoundingClientRect(),x=px-q.left,y=py-q.top;
+  this.spawn(x,y,1);
+  beep(520+rand(0,200),900,.25,"sine",.03);
+ },
+ update(dt){
+  this.t+=dt;
+  // a quiet ripple now and then, as if a drop fell by itself
+  this.auto-=dt;
+  if(this.auto<=0){this.auto=rand(1.5,3);this.spawn(rand(0,W()),rand(0,H()),.6)}
+  for(const g of this.rings)g.r+=dt*95;
+  this.rings=this.rings.filter(g=>g.r<this.MAX);
+ },
+ draw(){
+  const c=ctx2d,w=W(),h=H();
+  const bg=c.createLinearGradient(0,0,0,h);
+  bg.addColorStop(0,"#0d3b4f");bg.addColorStop(1,"#06202c");
+  c.fillStyle=bg;c.fillRect(0,0,w,h);
+  c.strokeStyle="#bff4ff";c.lineWidth=2;
+  for(const g of this.rings){
+   const a=g.k*(1-g.r/this.MAX);
+   if(a<=0)continue;
+   c.globalAlpha=a;
+   c.beginPath();c.arc(g.x,g.y,g.r,0,6.283);c.stroke();
+   c.globalAlpha=a*.5;
+   c.beginPath();c.arc(g.x,g.y,g.r*.7,0,6.283);c.stroke();
+  }
+  c.globalAlpha=1;
+ },
+ destroy(){this.a=false}
+};
+
+/* ============ RELAX: KINETIC SAND ============ */
+const KineticSand={
+ a:false,
+ G:520,
+ init(){this.a=true;this.reset();hudTitle("KINETIC SAND","Tap to pull the sand up and shape it")},
+ reset(){
+  const w=W(),h=H();
+  this.g=[];
+  for(let i=0;i<300;i++)this.g.push({x:rand(w*.2,w*.8),y:rand(h*.3,h-40),vx:0,vy:0,c:Math.random()<.5?"#e8c27a":"#d9a95c"});
+  this.pull=null;this.t=0;
+ },
+ pointer(px,py){
+  const q=cv2d.getBoundingClientRect();
+  this.pull={x:px-q.left,y:py-q.top,t:.8};
+ },
+ update(dt){
+  this.t+=dt;
+  const g=this.g,w=W(),floor=H()-24,P=this.pull;
+  if(P){P.t-=dt;if(P.t<=0)this.pull=null}
+  for(const p of g){
+   p.vy+=this.G*dt;
+   if(this.pull){
+    // grains near the touch are lifted toward it
+    const dx=this.pull.x-p.x,dy=this.pull.y-p.y,d=Math.hypot(dx,dy)+.01;
+    if(d<260){const f=900*(1-d/260)*dt;p.vx+=dx/d*f;p.vy+=dy/d*f}
+   }
+   p.vx*=1-Math.min(1,dt*2);
+   p.x+=p.vx*dt;p.y+=p.vy*dt;
+   if(p.x<4){p.x=4;p.vx*=-.3}
+   if(p.x>w-4){p.x=w-4;p.vx*=-.3}
+   if(p.y>floor){p.y=floor;p.vy*=-.2;p.vx*=.8}
+   if(p.y<4){p.y=4;p.vy=0}
+  }
+  // grains push each other apart so they pile up instead of overlapping
+  const R=5;
+  for(let i=0;i<g.length;i++)for(let j=i+1;j<g.length;j++){
+   const a=g[i],b=g[j],dx=b.x-a.x,dy=b.y-a.y;
+   if(Math.abs(dx)>R||Math.abs(dy)>R)continue;
+   const d=Math.hypot(dx,dy)||.01;
+   if(d<R){const o=(R-d)*.5,ux=dx/d*o,uy=dy/d*o;a.x-=ux;a.y-=uy;b.x+=ux;b.y+=uy}
+  }
+ },
+ draw(){
+  const c=ctx2d,w=W(),h=H();
+  const bg=c.createLinearGradient(0,0,0,h);
+  bg.addColorStop(0,"#fbf1dc");bg.addColorStop(1,"#f0dfbc");
+  c.fillStyle=bg;c.fillRect(0,0,w,h);
+  for(const p of this.g){c.fillStyle=p.c;c.fillRect(p.x-1.5,p.y-1.5,3,3)}
+  if(this.pull){
+   c.strokeStyle="rgba(120,90,50,.35)";c.lineWidth=2;
+   c.beginPath();c.arc(this.pull.x,this.pull.y,40*this.pull.t+20,0,6.283);c.stroke();
+  }
+ },
+ destroy(){this.a=false}
+};
+
+/* ============ RELAX: STICKY DROP ============ */
+const StickyDrop={
+ a:false,
+ BW:24,
+ R:12,
+ COL:["#ff7eb6","#7ee0ff","#ffe27a","#9dff8f","#c39bff"],
+ init(){this.a=true;this.reset();hudTitle("STICKY DROP","Tap to drop a sticky ball onto the pile")},
+ reset(){
+  this.cols=Math.floor(W()/this.BW)+1;
+  this.colH=new Array(this.cols).fill(0);
+  this.stuck=[];this.fall=[];this.full=0;
+ },
+ pointer(px){
+  const q=cv2d.getBoundingClientRect(),x=px-q.left;
+  if(this.full>0||this.fall.length>=8)return;
+  this.fall.push({x:Math.min(W()-6,Math.max(6,x)),y:-this.R,vy:0,c:this.COL[Math.floor(Math.random()*this.COL.length)]});
+ },
+ update(dt){
+  const R=this.R,floor=H()-30,last=this.cols-1;
+  for(const b of this.fall){
+   b.vy+=900*dt;b.y+=b.vy*dt;
+   const i=Math.min(last,Math.max(0,Math.floor(b.x/this.BW)));
+   const lo=Math.max(0,i-1),hi=Math.min(last,i+1);
+   let base=0;
+   for(let k=lo;k<=hi;k++)base=Math.max(base,this.colH[k]);
+   const rest=floor-base-R;
+   if(b.y>=rest){
+    // the ball sticks where it lands and lifts the columns under it
+    b.y=rest;b.done=true;
+    this.stuck.push({x:b.x,y:rest,c:b.c});
+    for(let k=lo;k<=hi;k++)this.colH[k]=Math.max(this.colH[k],base+(k===i?R*1.7:R*.9));
+    beep(300,200,.06,"sine",.04);
+  }}
+  this.fall=this.fall.filter(b=>!b.done);
+  // pile reached the top: let it fall away and start again
+  if(Math.max(...this.colH)>H()-200)this.full+=dt;
+  if(this.full>1.6)this.reset();
+ },
+ draw(){
+  const c=ctx2d,w=W(),h=H(),R=this.R;
+  c.fillStyle="#1d1b33";c.fillRect(0,0,w,h);
+  c.fillStyle="#2f2b52";c.fillRect(0,H()-30,w,30);
+  for(const b of this.stuck.concat(this.fall))this.ball(c,b.x,b.y,R,b.c);
+  if(this.full>0)text("PILE FULL",w/2,h*.3,22,"#ffe27a","center",900);
+ },
+ ball(c,x,y,R,col){
+  const g=c.createRadialGradient(x-R*.35,y-R*.35,R*.1,x,y,R);
+  g.addColorStop(0,"#ffffff");g.addColorStop(.35,col);g.addColorStop(1,"rgba(0,0,0,.35)");
+  c.fillStyle=g;c.beginPath();c.arc(x,y,R,0,6.283);c.fill();
+ },
+ destroy(){this.a=false}
+};
+
+/* ============ RELAX: POTTERY WHEEL ============ */
+const PotteryWheel={
+ a:false,
+ ROWS:30,
+ init(){this.a=true;this.reset();hudTitle("POTTERY WHEEL","Tap next to the clay wall to shape it")},
+ reset(){this.R=new Array(this.ROWS).fill(40);this.spin=0;this.boost=0;this.t=0},
+ geom(){
+  const w=W(),h=H();
+  return {cx:w/2,top:h*.18,bot:h*.86,step:(h*.68)/this.ROWS};
+ },
+ pointer(px,py){
+  const q=cv2d.getBoundingClientRect(),x=px-q.left,y=py-q.top;
+  const g=this.geom(),i=Math.round((g.bot-y)/g.step),dist=Math.abs(x-g.cx);
+  this.boost=Math.min(6,this.boost+1.5);
+  if(i<0||i>=this.ROWS)return;
+  if(Math.abs(dist-this.R[i])>30)return;
+  // the wall moves toward the finger, a little less on the rows beside it
+  for(let k=Math.max(0,i-2);k<=Math.min(this.ROWS-1,i+2);k++){
+   const f=k===i?.35:.12;
+   this.R[k]=Math.min(110,Math.max(8,this.R[k]+(dist-this.R[k])*f));
+  }
+  beep(300,220,.08,"triangle",.05);
+ },
+ update(dt){
+  this.t+=dt;
+  this.spin+=(2+this.boost)*dt;
+  this.boost*=Math.exp(-dt*1.5);
+ },
+ draw(){
+  const c=ctx2d,w=W(),h=H(),g=this.geom();
+  c.fillStyle="#2b1d14";c.fillRect(0,0,w,h);
+  // wheel head under the clay
+  c.fillStyle="#5a3b25";
+  c.beginPath();c.ellipse(g.cx,g.bot+6,Math.min(w*.42,160),18,0,0,6.283);c.fill();
+  // clay profile: up the right side, down the left side
+  c.beginPath();
+  for(let i=0;i<this.ROWS;i++){
+   const y=g.bot-i*g.step,x=g.cx+this.R[i];
+   if(i===0)c.moveTo(x,y);else c.lineTo(x,y);
+  }
+  for(let i=this.ROWS-1;i>=0;i--)c.lineTo(g.cx-this.R[i],g.bot-i*g.step);
+  c.closePath();
+  c.fillStyle="#c77b4a";c.fill();
+  // turning marks that show the wheel is moving
+  c.fillStyle="rgba(255,220,180,.28)";
+  for(let i=0;i<this.ROWS;i++){
+   const y=g.bot-i*g.step,sx=g.cx+Math.cos(this.spin+i*.7)*this.R[i]*.8;
+   c.fillRect(sx-6,y-1,12,2);
+  }
+ },
+ destroy(){this.a=false}
+};
+
+/* ============ RELAX: INK IN WATER ============ */
+const InkWater={
+ a:false,
+ COL:["#ff4f8b","#ffb400","#3ddbd9","#7b61ff","#34e26b","#ff7a45"],
+ MAX:900,
+ init(){this.a=true;this.reset();hudTitle("INK IN WATER","Tap to drop ink and watch it swirl")},
+ reset(){this.p=[];this.t=0;this.k=0},
+ pointer(px,py){
+  const q=cv2d.getBoundingClientRect(),x=px-q.left,y=py-q.top;
+  const col=this.COL[this.k++%this.COL.length];
+  for(let i=0;i<60;i++){
+   const a=Math.random()*6.283,s=rand(4,40);
+   this.p.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,r:rand(4,8),c:col});
+  }
+  if(this.p.length>this.MAX)this.p.splice(0,this.p.length-this.MAX);
+  beep(360,240,.25,"sine",.03);
+ },
+ update(dt){
+  this.t+=dt;
+  const t=this.t;
+  for(const p of this.p){
+   // a slow swirl field: the ink folds and stretches as it drifts
+   const fx=Math.sin(p.y*.012+t*.7)*18,fy=Math.cos(p.x*.012-t*.6)*18;
+   p.vx+=(fx-p.vx)*dt*1.5;
+   p.vy+=(fy-p.vy)*dt*1.5;
+   p.x+=p.vx*dt;p.y+=p.vy*dt;
+   p.r=Math.min(18,p.r+dt*1.2);
+  }
+ },
+ draw(){
+  const c=ctx2d,w=W(),h=H();
+  const bg=c.createLinearGradient(0,0,0,h);
+  bg.addColorStop(0,"#eaf6ff");bg.addColorStop(1,"#bfe0f2");
+  c.fillStyle=bg;c.fillRect(0,0,w,h);
+  c.globalAlpha=.16;
+  for(const p of this.p){
+   c.fillStyle=p.c;c.beginPath();c.arc(p.x,p.y,p.r,0,6.283);c.fill();
+  }
+  c.globalAlpha=1;
+ },
+ destroy(){this.a=false}
+};
+
+/* ============ RELAX: MARBLE RUN ============ */
+const MarbleRun={
+ a:false,
+ R:12,
+ COL:["#ff6b8b","#ffd166","#6ee7f9","#a78bfa","#86efac"],
+ RAMPS:[[0,.22,.72,.30],[.28,.44,1,.52],[0,.66,.7,.74],[.3,.88,1,.96]],
+ init(){this.a=true;this.reset();hudTitle("MARBLE RUN","Tap anywhere along the top to drop a marble")},
+ reset(){this.m=[];this.t=0;this.k=0},
+ layout(){
+  const w=W(),h=H();
+  return this.RAMPS.map(([a,b,c,d])=>({x1:a*w,y1:b*h,x2:c*w,y2:d*h}));
+ },
+ pointer(px,py){
+  const q=cv2d.getBoundingClientRect(),w=W();
+  const x=Math.max(w*.05,Math.min(w*.95,px-q.left));
+  this.m.push({x,y:H()*.02,vx:0,vy:0,c:this.COL[this.k++%this.COL.length]});
+  if(this.m.length>40)this.m.shift();
+  beep(600,800,.06,"sine",.03);
+ },
+ update(dt){
+  this.t+=dt;
+  const S=this.layout(),R=this.R,sub=4,h=dt/sub,H0=H();
+  for(const m of this.m){
+   for(let s=0;s<sub;s++){
+    m.vy+=900*h;m.x+=m.vx*h;m.y+=m.vy*h;
+    for(const r of S){
+     // closest point on the ramp, then push the marble out and bounce it off
+     const dx=r.x2-r.x1,dy=r.y2-r.y1,L2=dx*dx+dy*dy;
+     const u=Math.max(0,Math.min(1,((m.x-r.x1)*dx+(m.y-r.y1)*dy)/L2));
+     const px=r.x1+dx*u,py=r.y1+dy*u;
+     const ox=m.x-px,oy=m.y-py,d=Math.hypot(ox,oy);
+     if(d<R&&d>0){
+      const nx=ox/d,ny=oy/d;
+      m.x=px+nx*R;m.y=py+ny*R;
+      const vn=m.vx*nx+m.vy*ny;
+      if(vn<0){m.vx-=1.3*vn*nx;m.vy-=1.3*vn*ny}
+      m.vx*=.995;
+     }
+    }
+   }
+  }
+  this.m=this.m.filter(m=>m.y<H0+40);
+ },
+ draw(){
+  const c=ctx2d,w=W(),h=H();
+  c.fillStyle="#241c2e";c.fillRect(0,0,w,h);
+  c.strokeStyle="#f0c674";c.lineWidth=10;c.lineCap="round";
+  for(const r of this.layout()){c.beginPath();c.moveTo(r.x1,r.y1);c.lineTo(r.x2,r.y2);c.stroke()}
+  for(const m of this.m){
+   const g=c.createRadialGradient(m.x-4,m.y-4,2,m.x,m.y,this.R);
+   g.addColorStop(0,"#ffffff");g.addColorStop(.4,m.c);g.addColorStop(1,"rgba(0,0,0,.4)");
+   c.fillStyle=g;c.beginPath();c.arc(m.x,m.y,this.R,0,6.283);c.fill();
+  }
+ },
+ destroy(){this.a=false}
+};
+
+/* ============ RELAX: POPCORN POP ============ */
+const PopcornPop={
+ a:false,
+ init(){this.a=true;this.reset();hudTitle("POPCORN POP","Tap near the kernels to warm them up")},
+ reset(){
+  const w=W(),h=H();
+  this.k=[];this.puffs=[];this.wait=0;this.t=0;
+  for(let i=0;i<40;i++)this.k.push({x:rand(w*.15,w*.85),y:h*.6+rand(0,h*.1),heat:0,p:false});
+ },
+ pointer(px,py){
+  const q=cv2d.getBoundingClientRect(),x=px-q.left,y=py-q.top;
+  for(const k of this.k){
+   if(k.p)continue;
+   const d=Math.hypot(k.x-x,k.y-y);
+   if(d<70)k.heat+=.45*(1-d/70)+.2;
+  }
+  beep(1400,1800,.03,"square",.01);
+ },
+ update(dt){
+  this.t+=dt;
+  const w=W(),floor=H()*.8;
+  for(const k of this.k){
+   if(k.p)continue;
+   k.heat=Math.max(0,k.heat-dt*.25);
+   if(k.heat>=1){
+    k.p=true;
+    if(this.puffs.length<120)this.puffs.push({x:k.x,y:k.y,vx:rand(-120,120),vy:rand(-420,-260),r:rand(9,13)});
+    beep(1200,1600,.04,"triangle",.02);
+   }
+  }
+  for(const p of this.puffs){
+   p.vy+=900*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=.99;
+   if(p.y>floor){p.y=floor;p.vy*=-.25;p.vx*=.6}
+   p.x=Math.max(8,Math.min(w-8,p.x));
+  }
+  // once the whole batch has popped, start a fresh one
+  if(this.k.every(k=>k.p)){this.wait+=dt;if(this.wait>2.5)this.reset()}
+ },
+ draw(){
+  const c=ctx2d,w=W(),h=H(),floor=h*.8;
+  c.fillStyle="#2a1b2e";c.fillRect(0,0,w,h);
+  c.fillStyle="#8a8f9c";
+  c.beginPath();c.ellipse(w/2,floor+14,w*.45,18,0,0,6.283);c.fill();
+  for(const k of this.k){
+   if(k.p)continue;
+   c.fillStyle=k.heat>.4?"#ff8a3d":"#d9a441";
+   c.beginPath();c.ellipse(k.x,k.y,6,4.5,0,0,6.283);c.fill();
+  }
+  c.fillStyle="#fff8ec";
+  c.shadowColor="rgba(255,240,200,.6)";c.shadowBlur=8;
+  for(const p of this.puffs){c.beginPath();c.arc(p.x,p.y,p.r,0,6.283);c.fill()}
+  c.shadowBlur=0;
+  if(this.wait>0)text("Fresh batch...",w/2,h*.12,18,"#ffe6b0","center",800);
+ },
+ destroy(){this.a=false}
+};
+
+/* ============ RELAX: BALLOON FLOAT ============ */
+const BalloonFloat={
+ a:false,
+ COL:["#ff6b8b","#ffd166","#6ee7b7","#7aa2ff","#c084fc","#ff9f5a"],
+ init(){this.a=true;this.reset();hudTitle("BALLOON FLOAT","Tap to release a balloon, tap one to lift it")},
+ reset(){
+  this.b=[];this.t=0;this.spawnT=0;
+  for(let i=0;i<6;i++)this.add(rand(20,W()-20),rand(H()*.2,H()));
+ },
+ add(x,y){
+  const v=rand(40,70);
+  this.b.push({x,y,r:rand(22,30),v,base:v,ph:Math.random()*6.283,c:this.COL[Math.floor(Math.random()*this.COL.length)]});
+  if(this.b.length>30)this.b.shift();
+ },
+ pointer(px,py){
+  const q=cv2d.getBoundingClientRect(),x=px-q.left,y=py-q.top;
+  const hit=this.b.find(b=>Math.hypot(b.x-x,b.y-y)<b.r*1.2);
+  if(hit){hit.v+=60;beep(700,900,.05,"sine",.03)}
+  else{this.add(x,H()+30);beep(500,650,.06,"sine",.03)}
+ },
+ update(dt){
+  this.t+=dt;
+  for(const b of this.b){
+   b.v+=(b.base-b.v)*Math.min(1,dt*1.5);
+   b.y-=b.v*dt;
+   b.x+=Math.sin(this.t*1.3+b.ph)*18*dt;
+  }
+  this.b=this.b.filter(b=>b.y>-60);
+  this.spawnT-=dt;
+  if(this.spawnT<=0){this.spawnT=rand(1.2,2.2);this.add(rand(20,W()-20),H()+40)}
+ },
+ draw(){
+  const c=ctx2d,w=W(),h=H();
+  const bg=c.createLinearGradient(0,0,0,h);
+  bg.addColorStop(0,"#9bd8ff");bg.addColorStop(1,"#e8f7ff");
+  c.fillStyle=bg;c.fillRect(0,0,w,h);
+  for(const b of this.b){
+   c.strokeStyle="rgba(60,70,90,.45)";c.lineWidth=1.2;
+   c.beginPath();
+   c.moveTo(b.x,b.y+b.r*1.2);
+   c.quadraticCurveTo(b.x+6*Math.sin(this.t*2+b.ph),b.y+b.r*2.6,b.x,b.y+b.r*3.2);
+   c.stroke();
+   c.fillStyle=b.c;
+   c.beginPath();c.ellipse(b.x,b.y,b.r*.9,b.r,0,0,6.283);c.fill();
+   c.fillStyle="rgba(255,255,255,.4)";
+   c.beginPath();c.ellipse(b.x-b.r*.3,b.y-b.r*.4,b.r*.22,b.r*.35,0,0,6.283);c.fill();
+  }
+ },
+ destroy(){this.a=false}
+};
+
+/* ============ RELAX: PAINT MIXING ============ */
+const PaintMix={
+ a:false,
+ PAINT:[[255,70,110],[255,190,40],[60,200,255],[120,90,255],[80,220,120]],
+ init(){this.a=true;this.reset();hudTitle("PAINT MIXING","Tap to drop paint, drops blend where they meet")},
+ reset(){this.d=[];this.k=0;this.t=0},
+ pointer(px,py){
+  const q=cv2d.getBoundingClientRect(),x=px-q.left,y=py-q.top;
+  const base=this.PAINT[this.k++%this.PAINT.length];
+  // a drop landing in wet paint takes on the colours it touches
+  const near=this.d.filter(d=>d.r>10&&Math.hypot(d.x-x,d.y-y)<d.r+20);
+  const cs=near.map(d=>d.c).concat([base]);
+  const col=[0,1,2].map(i=>cs.reduce((s,c)=>s+c[i],0)/cs.length);
+  this.d.push({x,y,r:0,max:rand(60,95),a:0,c:col});
+  if(this.d.length>24)this.d.shift();
+  beep(440+rand(0,200),520,.1,"sine",.03);
+ },
+ update(dt){
+  this.t+=dt;
+  for(const d of this.d){
+   d.r+=(d.max-d.r)*Math.min(1,dt*2.2);
+   d.a=Math.min(.85,d.a+dt*1.5);
+  }
+ },
+ draw(){
+  const c=ctx2d,w=W(),h=H();
+  c.fillStyle="#f7f4ef";c.fillRect(0,0,w,h);
+  c.globalCompositeOperation="multiply";
+  for(const d of this.d){
+   const [r,g,b]=d.c.map(Math.round);
+   const gr=c.createRadialGradient(d.x,d.y,d.r*.2,d.x,d.y,d.r);
+   gr.addColorStop(0,`rgba(${r},${g},${b},${d.a})`);
+   gr.addColorStop(1,`rgba(${r},${g},${b},0)`);
+   c.fillStyle=gr;c.beginPath();c.arc(d.x,d.y,d.r,0,6.283);c.fill();
+  }
+  c.globalCompositeOperation="source-over";
+ },
+ destroy(){this.a=false}
+};
+
+/* ============ RELAX: WIND CHIMES ============ */
+const WindChimes={
+ a:false,
+ F:[523,587,659,784,880,988,1047],
+ init(){this.a=true;this.reset();hudTitle("WIND CHIMES","Tap a side to blow a gust across the chimes")},
+ reset(){
+  const w=W(),h=H(),n=this.F.length;
+  this.t=0;this.gust=0;this.barY=h*.2;
+  this.ch=this.F.map((f,i)=>({
+   x:w*.16+i*(w*.68/(n-1)),
+   L:h*.2-i*h*.012,   // lower notes hang on longer tubes
+   th:0,w:0,cd:0,f
+  }));
+ },
+ pointer(px){
+  const q=cv2d.getBoundingClientRect(),x=px-q.left;
+  const dir=x<W()/2?-1:1;
+  this.gust=Math.max(-5,Math.min(5,this.gust+dir*3.5));
+ },
+ update(dt){
+  this.t+=dt;
+  this.gust*=Math.exp(-dt*1.2);
+  // a gentle breeze all the time, plus whatever the player blew
+  const wind=1.4*Math.sin(this.t*.45)+.5*Math.sin(this.t*1.3)+this.gust;
+  for(const c of this.ch){
+   const prev=c.th;
+   c.w+=(-6*c.th-.9*c.w+wind*1.2)*dt;
+   c.th+=c.w*dt;
+   if(c.th>1){c.th=1;c.w=0}
+   if(c.th<-1){c.th=-1;c.w=0}
+   c.cd=Math.max(0,c.cd-dt);
+   // ring when the tube swings through its middle
+   if(prev*c.th<0&&Math.abs(c.w)>.5&&c.cd<=0){
+    c.cd=.6;
+    beep(c.f,c.f*.99,1.1,"sine",.035);
+   }
+  }
+ },
+ draw(){
+  const c=ctx2d,w=W(),h=H();
+  const sky=c.createLinearGradient(0,0,0,h);
+  sky.addColorStop(0,"#c9e7ff");sky.addColorStop(1,"#f1f8ff");
+  c.fillStyle=sky;c.fillRect(0,0,w,h);
+  c.fillStyle="#7a5a3a";
+  c.fillRect(w*.12,this.barY-4,w*.76,8);
+  for(const t of this.ch){
+   c.save();c.translate(t.x,this.barY);c.rotate(t.th);
+   c.strokeStyle="#777";c.lineWidth=1.5;
+   c.beginPath();c.moveTo(0,0);c.lineTo(0,t.L*.25);c.stroke();
+   const g=c.createLinearGradient(-6,0,6,0);
+   g.addColorStop(0,"#e8dcc0");g.addColorStop(.5,"#fff8e6");g.addColorStop(1,"#c8b48a");
+   c.fillStyle=g;
+   c.fillRect(-6,t.L*.25,12,t.L*.75);
+   c.restore();
+  }
+ },
+ destroy(){this.a=false}
+};
+
+/* ============ RELAX: SOAP BUBBLES ============ */
+const SoapBubbles={
+ a:false,
+ init(){this.a=true;this.reset();hudTitle("SOAP BUBBLES","Tap empty space to blow a bubble, tap one to pop it")},
+ reset(){
+  this.b=[];this.sp=[];this.t=0;
+  for(let i=0;i<5;i++)this.blow(rand(0,W()),rand(0,H()));
+ },
+ blow(x,y){
+  this.b.push({x,y,r:rand(16,38),vx:rand(-12,12),vy:rand(-30,-14),ph:Math.random()*6.283,h:Math.random()*360});
+  if(this.b.length>40)this.b.shift();
+ },
+ pointer(px,py){
+  const q=cv2d.getBoundingClientRect(),x=px-q.left,y=py-q.top;
+  const hit=this.b.findIndex(b=>Math.hypot(b.x-x,b.y-y)<b.r);
+  if(hit>=0){
+   const b=this.b[hit];
+   this.b.splice(hit,1);
+   this.burst(b.x,b.y,b.h);
+   beep(900,1300,.08,"sine",.04);
+  }else this.blow(x,y);
+ },
+ burst(x,y,h){
+  for(let i=0;i<12;i++){
+   const a=i/12*6.283;
+   this.sp.push({x,y,vx:Math.cos(a)*90,vy:Math.sin(a)*90,l:1,h});
+  }
+ },
+ update(dt){
+  this.t+=dt;
+  for(const b of this.b){
+   b.y+=(b.vy+Math.sin(this.t*2+b.ph)*12)*dt;
+   b.x+=b.vx*dt;
+  }
+  // bubbles that float off the top are replaced by new ones from the bottom
+  const gone=this.b.filter(b=>b.y<-b.r).length;
+  this.b=this.b.filter(b=>b.y>=-b.r);
+  for(let i=0;i<gone;i++)this.blow(rand(0,W()),H()+rand(10,40));
+  for(const s of this.sp){s.x+=s.vx*dt;s.y+=s.vy*dt;s.vx*=.96;s.vy*=.96;s.l-=dt*1.6}
+  this.sp=this.sp.filter(s=>s.l>0);
+ },
+ draw(){
+  const c=ctx2d,w=W(),h=H();
+  const bg=c.createLinearGradient(0,0,0,h);
+  bg.addColorStop(0,"#0f2740");bg.addColorStop(1,"#2a4d7a");
+  c.fillStyle=bg;c.fillRect(0,0,w,h);
+  for(const b of this.b){
+   const hue=(b.h+this.t*40)%360;
+   c.fillStyle=`hsla(${(hue+120)%360},95%,70%,.12)`;
+   c.strokeStyle=`hsla(${hue},95%,75%,.9)`;
+   c.lineWidth=2.5;
+   c.beginPath();c.arc(b.x,b.y,b.r,0,6.283);c.fill();c.stroke();
+   c.fillStyle="rgba(255,255,255,.6)";
+   c.beginPath();c.arc(b.x-b.r*.35,b.y-b.r*.35,b.r*.18,0,6.283);c.fill();
+  }
+  for(const s of this.sp){
+   c.fillStyle=`hsla(${s.h},90%,75%,${s.l})`;
+   c.beginPath();c.arc(s.x,s.y,3,0,6.283);c.fill();
+  }
+ },
+ destroy(){this.a=false}
+};
+
+/* ============ RELAX: SNOW GLOBE ============ */
+const SnowGlobe={
+ a:false,
+ init(){this.a=true;this.reset();hudTitle("SNOW GLOBE","Tap to shake the snow")},
+ reset(){
+  const w=W(),h=H();
+  this.cx=w/2;this.cy=h*.46;this.R=Math.min(w*.4,h*.3);
+  this.t=0;this.shake=0;this.f=[];
+  for(let i=0;i<140;i++)this.f.push(this.flake());
+  // start with the snow already settled on the floor of the globe
+  for(const f of this.f){f.y=this.cy+this.R*.6+Math.random()*this.R*.2;f.rest=true}
+ },
+ flake(){
+  const a=Math.random()*6.283,d=Math.sqrt(Math.random())*this.R*.85;
+  return {x:this.cx+Math.cos(a)*d,y:this.cy-this.R*rand(0,.8),vx:0,vy:0,r:rand(1.5,3.5),ph:Math.random()*6.283,rest:false};
+ },
+ pointer(){
+  this.shake=1;
+  for(const f of this.f){
+   f.rest=false;
+   f.vx=rand(-260,260);f.vy=rand(-380,-120);
+  }
+  beep(220,140,.3,"triangle",.04);
+ },
+ update(dt){
+  this.t+=dt;
+  this.shake=Math.max(0,this.shake-dt);
+  const bottom=this.cy+this.R*.85;
+  for(const f of this.f){
+   if(f.rest)continue;
+   f.vy+=260*dt;
+   f.vx+=Math.sin(this.t+f.ph)*8*dt;   // flutter as it falls
+   f.vx*=Math.exp(-dt*1.5);
+   f.x+=f.vx*dt;f.y+=f.vy*dt;
+   // stay inside the glass
+   const dx=f.x-this.cx,dy=f.y-this.cy,d=Math.hypot(dx,dy),lim=this.R*.88;
+   if(d>lim){f.x=this.cx+dx/d*lim;f.y=this.cy+dy/d*lim;f.vx*=-.3;f.vy*=-.3}
+   if(f.y>bottom){f.y=bottom;f.vy=0;f.vx*=.2;f.rest=true}
+  }
+ },
+ draw(){
+  const c=ctx2d,w=W(),h=H(),cx=this.cx,cy=this.cy,R=this.R;
+  const bg=c.createLinearGradient(0,0,0,h);
+  bg.addColorStop(0,"#1c2440");bg.addColorStop(1,"#0d1224");
+  c.fillStyle=bg;c.fillRect(0,0,w,h);
+  // wooden base
+  c.fillStyle="#6b4a2e";
+  c.fillRect(cx-R*.7,cy+R*.92,R*1.4,R*.2);
+  c.save();
+  c.beginPath();c.arc(cx,cy,R,0,6.283);c.clip();
+  c.fillStyle="#1e3c66";c.fillRect(cx-R,cy-R,R*2,R*2);
+  // a small house on the snow
+  c.fillStyle="#8b3a3a";c.fillRect(cx-R*.3,cy+R*.5,R*.28,R*.3);
+  c.fillStyle="#c9d6e6";c.beginPath();
+  c.moveTo(cx-R*.36,cy+R*.5);c.lineTo(cx-R*.16,cy+R*.3);c.lineTo(cx+R*.04,cy+R*.5);c.closePath();c.fill();
+  c.fillStyle="#fff";
+  for(const f of this.f){c.beginPath();c.arc(f.x,f.y,f.r,0,6.283);c.fill()}
+  c.restore();
+  c.strokeStyle="rgba(200,230,255,.6)";c.lineWidth=4;
+  c.beginPath();c.arc(cx,cy,R,0,6.283);c.stroke();
+  c.fillStyle="rgba(255,255,255,.25)";
+  c.beginPath();c.ellipse(cx-R*.45,cy-R*.4,R*.14,R*.28,-.5,0,6.283);c.fill();
+ },
+ destroy(){this.a=false}
+};
+
+/* ============ RELAX: KOI POND ============ */
+const KoiPond={
+ a:false,
+ init(){this.a=true;this.reset();hudTitle("KOI POND","Tap the water to drop food for the fish")},
+ reset(){
+  const w=W(),h=H();
+  this.food=[];this.ripples=[];this.t=0;this.eaten=0;
+  this.pads=[];for(let i=0;i<6;i++)this.pads.push({x:rand(w*.1,w*.9),y:rand(h*.15,h*.9),r:rand(18,28)});
+  this.fish=["#ff8a4c","#fff1e0","#ffb347","#ff5e62","#f5f5f5"].map(c=>({
+   x:rand(w*.2,w*.8),y:rand(h*.25,h*.8),a:rand(0,6.283),sp:rand(40,70),ph:Math.random()*6.283,c
+  }));
+ },
+ pointer(px,py){
+  const q=cv2d.getBoundingClientRect(),x=px-q.left,y=py-q.top;
+  this.food.push({x,y,t:0});
+  this.ripples.push({x,y,r:0});
+  if(this.food.length>12)this.food.shift();
+  beep(700,500,.06,"sine",.03);
+ },
+ update(dt){
+  this.t+=dt;
+  const w=W(),h=H();
+  for(const r of this.ripples)r.r+=dt*60;
+  this.ripples=this.ripples.filter(r=>r.r<70);
+  for(const d of this.food){d.t+=dt;d.y+=Math.sin(this.t*2+d.x)*2*dt}
+  for(const f of this.fish){
+   // swim toward the nearest food, otherwise wander lazily
+   let best=null,bd=1e9;
+   for(const d of this.food){const dd=Math.hypot(d.x-f.x,d.y-f.y);if(dd<bd){bd=dd;best=d}}
+   if(best){
+    let diff=Math.atan2(best.y-f.y,best.x-f.x)-f.a;
+    diff=Math.atan2(Math.sin(diff),Math.cos(diff));
+    const max=2.4*dt;
+    f.a+=Math.max(-max,Math.min(max,diff));
+   }else f.a+=Math.sin(this.t*.6+f.ph)*.25*dt;
+   const sp=best?f.sp*1.2:f.sp;
+   f.x+=Math.cos(f.a)*sp*dt;f.y+=Math.sin(f.a)*sp*dt;
+   // stay inside the pond
+   if(f.x<20||f.x>w-20){f.a=Math.PI-f.a;f.x=Math.max(20,Math.min(w-20,f.x))}
+   if(f.y<h*.12||f.y>h*.92){f.a=-f.a;f.y=Math.max(h*.12,Math.min(h*.92,f.y))}
+   for(const d of this.food)if(!d.gone&&Math.hypot(d.x-f.x,d.y-f.y)<18){d.gone=true;this.eaten++}
+  }
+  this.food=this.food.filter(d=>!d.gone&&d.t<12);
+ },
+ draw(){
+  const c=ctx2d,w=W(),h=H();
+  const bg=c.createLinearGradient(0,0,0,h);
+  bg.addColorStop(0,"#2f7a86");bg.addColorStop(1,"#1d5560");
+  c.fillStyle=bg;c.fillRect(0,0,w,h);
+  c.fillStyle="#4f9a5a";
+  for(const p of this.pads){c.beginPath();c.arc(p.x,p.y,p.r,.3,6.0);c.lineTo(p.x,p.y);c.fill()}
+  c.strokeStyle="rgba(255,255,255,.5)";c.lineWidth=2;
+  for(const r of this.ripples){c.globalAlpha=1-r.r/70;c.beginPath();c.arc(r.x,r.y,r.r,0,6.283);c.stroke()}
+  c.globalAlpha=1;
+  c.fillStyle="#ffd27a";
+  for(const d of this.food){c.beginPath();c.arc(d.x,d.y,4,0,6.283);c.fill()}
+  for(const f of this.fish){
+   c.save();c.translate(f.x,f.y);c.rotate(f.a);
+   c.fillStyle=f.c;
+   c.beginPath();c.ellipse(0,0,16,7,0,0,6.283);c.fill();
+   c.beginPath();c.moveTo(-12,0);c.lineTo(-24,-8);c.lineTo(-24,8);c.closePath();c.fill();
+   c.fillStyle="rgba(0,0,0,.25)";
+   c.beginPath();c.arc(7,-2,1.6,0,6.283);c.fill();
+   c.restore();
+  }
+ },
+ destroy(){this.a=false}
+};
+
+/* ============ RELAX: RAIN WINDOW ============ */
+const RainWindow={
+ a:false,
+ init(){this.a=true;this.reset();hudTitle("RAIN WINDOW","Tap the fogged glass to wipe it clear")},
+ reset(){
+  this.t=0;this.wipes=[];this.d=[];
+  for(let i=0;i<90;i++)this.d.push(this.drop(true));
+ },
+ drop(any){
+  return {x:rand(0,W()),y:any?rand(0,H()):rand(-40,-5),v:rand(120,260),len:rand(8,22)};
+ },
+ pointer(px,py){
+  const q=cv2d.getBoundingClientRect(),x=px-q.left,y=py-q.top;
+  this.wipes.push({x,y,r:0,l:1});
+  if(this.wipes.length>10)this.wipes.shift();
+ },
+ update(dt){
+  this.t+=dt;
+  const h=H(),w=W();
+  for(let i=0;i<this.d.length;i++){
+   const d=this.d[i];
+   d.y+=d.v*dt;d.x+=dt*30;
+   if(d.y>h)this.d[i]=this.drop(false);
+   else if(d.x>w)d.x-=w;
+  }
+  // a wipe grows, then the fog slowly comes back over it
+  for(const p of this.wipes){p.r=Math.min(64,p.r+dt*300);p.l-=dt/6}
+  this.wipes=this.wipes.filter(p=>p.l>0);
+ },
+ draw(){
+  const c=ctx2d,w=W(),h=H();
+  const glass=()=>{
+   const g=c.createLinearGradient(0,0,0,h);
+   g.addColorStop(0,"#5d7689");g.addColorStop(1,"#2f4150");
+   c.fillStyle=g;c.fillRect(0,0,w,h);
+  };
+  const streaks=()=>{
+   c.strokeStyle="rgba(210,235,255,.55)";c.lineWidth=2;
+   c.beginPath();
+   for(const d of this.d){c.moveTo(d.x,d.y);c.lineTo(d.x,d.y-d.len)}
+   c.stroke();
+  };
+  glass();
+  streaks();
+  c.fillStyle="rgba(200,210,220,.55)";
+  c.fillRect(0,0,w,h);
+  // wiped spots show the clear glass and the rain behind it again
+  for(const p of this.wipes){
+   c.save();
+   c.beginPath();c.arc(p.x,p.y,p.r,0,6.283);c.clip();
+   glass();streaks();
+   c.restore();
+  }
+ },
+ destroy(){this.a=false}
+};
+
+/* ============ RELAX: BALL PIT ============ */
+const BallPit={
+ a:false,
+ COL:["#ff6b9a","#ffd166","#6ee7f9","#a78bfa","#86efac","#fb923c"],
+ init(){this.a=true;this.reset();hudTitle("BALL PIT","Tap to drop a ball and stir the pit")},
+ reset(){
+  this.b=[];this.t=0;
+  for(let i=0;i<28;i++)this.add(rand(20,W()-20),rand(-400,-40));
+ },
+ add(x,y){
+  this.b.push({x,y,vx:rand(-30,30),vy:0,r:rand(14,22),c:this.COL[this.b.length%this.COL.length]});
+ },
+ pointer(px,py){
+  const q=cv2d.getBoundingClientRect(),x=px-q.left,y=py-q.top;
+  // the tap stirs nearby balls and drops one more in
+  for(const p of this.b){
+   const dx=p.x-x,dy=p.y-y,d=Math.hypot(dx,dy)+.01;
+   if(d<110){const f=260*(1-d/110);p.vx+=dx/d*f;p.vy+=dy/d*f}
+  }
+  if(this.b.length<70)this.add(Math.max(20,Math.min(W()-20,x)),y);
+  beep(300+rand(0,200),420,.08,"sine",.03);
+ },
+ update(dt){
+  this.t+=dt;
+  const b=this.b,n=b.length,w=W(),g=H()-16;
+  for(const p of b){
+   p.vy+=900*dt;
+   p.vx*=1-Math.min(1,dt*.8);
+   p.x+=p.vx*dt;p.y+=p.vy*dt;
+   if(p.x<p.r){p.x=p.r;p.vx=Math.abs(p.vx)*.5}
+   if(p.x>w-p.r){p.x=w-p.r;p.vx=-Math.abs(p.vx)*.5}
+   if(p.y>g-p.r){p.y=g-p.r;p.vy=-Math.abs(p.vy)*.35;p.vx*=.9}
+  }
+  // ball against ball, two passes so the pile settles
+  for(let pass=0;pass<2;pass++)
+  for(let i=0;i<n;i++)for(let j=i+1;j<n;j++){
+   const a=b[i],c=b[j],dx=c.x-a.x,dy=c.y-a.y,d=Math.hypot(dx,dy),m=a.r+c.r;
+   if(d>=m||d===0)continue;
+   const o=(m-d)/2,ux=dx/d,uy=dy/d;
+   a.x-=ux*o;a.y-=uy*o;c.x+=ux*o;c.y+=uy*o;
+   const rv=(c.vx-a.vx)*ux+(c.vy-a.vy)*uy;
+   if(rv<0){const J=.75*rv;a.vx+=J*ux;a.vy+=J*uy;c.vx-=J*ux;c.vy-=J*uy}
+  }
+ },
+ draw(){
+  const c=ctx2d,w=W(),h=H();
+  const bg=c.createLinearGradient(0,0,0,h);
+  bg.addColorStop(0,"#2a1d4a");bg.addColorStop(1,"#120c26");
+  c.fillStyle=bg;c.fillRect(0,0,w,h);
+  for(const p of this.b){
+   const g=c.createRadialGradient(p.x-p.r*.35,p.y-p.r*.35,p.r*.1,p.x,p.y,p.r);
+   g.addColorStop(0,"#ffffff");g.addColorStop(.35,p.c);g.addColorStop(1,"rgba(0,0,0,.35)");
+   c.fillStyle=g;c.beginPath();c.arc(p.x,p.y,p.r,0,6.283);c.fill();
+  }
+ },
+ destroy(){this.a=false}
+};
+
+/* ============ RELAX: LAVA LAMP ============ */
+const LavaLamp={
+ a:false,
+ COL:["#ff5e9c","#ffb347","#ffe066","#8f7bff","#5ee7c9"],
+ init(){this.a=true;this.reset();hudTitle("LAVA LAMP","Tap a blob to heat it, tap empty glass to add one")},
+ reset(){
+  this.bl=[];this.t=0;
+  for(let i=0;i<7;i++)this.add(rand(W()*.3,W()*.7),H()*rand(.5,.9));
+ },
+ add(x,y){
+  this.bl.push({x,y,r:rand(26,40),vy:0,up:false,ph:Math.random()*6.283,c:this.COL[this.bl.length%this.COL.length]});
+  if(this.bl.length>12)this.bl.shift();
+ },
+ pointer(px,py){
+  const q=cv2d.getBoundingClientRect(),x=px-q.left,y=py-q.top;
+  const hit=this.bl.find(b=>Math.hypot(b.x-x,b.y-y)<b.r+10);
+  if(hit){hit.up=true;hit.vy-=60;beep(360,520,.12,"sine",.03)}
+  else this.add(x,y);
+ },
+ update(dt){
+  this.t+=dt;
+  const w=W(),h=H();
+  for(const b of this.bl){
+   // warm blobs at the bottom rise, cooled ones sink back down
+   if(b.y>h*.84)b.up=true;
+   if(b.y<h*.16)b.up=false;
+   const tgt=b.up?-60:50;
+   b.vy+=(tgt-b.vy)*Math.min(1,dt*1.2);
+   b.y+=b.vy*dt;
+   b.x+=Math.sin(this.t*.9+b.ph)*14*dt;
+   b.x=Math.max(b.r,Math.min(w-b.r,b.x));
+  }
+ },
+ draw(){
+  const c=ctx2d,w=W(),h=H();
+  const bg=c.createLinearGradient(0,0,0,h);
+  bg.addColorStop(0,"#2b0f3a");bg.addColorStop(1,"#14061f");
+  c.fillStyle=bg;c.fillRect(0,0,w,h);
+  c.fillStyle="rgba(255,120,60,.22)";
+  c.fillRect(0,h*.86,w,h*.14);
+  for(const b of this.bl){
+   const g=c.createRadialGradient(b.x-b.r*.3,b.y-b.r*.3,b.r*.2,b.x,b.y,b.r);
+   g.addColorStop(0,"#ffffff");g.addColorStop(.35,b.c);g.addColorStop(1,"rgba(0,0,0,0)");
+   c.fillStyle=g;c.shadowColor=b.c;c.shadowBlur=24;
+   c.beginPath();c.arc(b.x,b.y,b.r,0,6.283);c.fill();
+  }
+  c.shadowBlur=0;
+ },
+ destroy(){this.a=false}
+};
 /* ============ HUB UI ============ */
 const AAA=[
 {id:"blade",icon:"⚔️",title:"Blade Arena",tag:"AAA • SWORD COMBAT",desc:"Full 3D sword fighting: limb-by-limb dismemberment, 6 worlds, 10 weapons, jetpack, parries, upgrades."},
@@ -40351,7 +41499,28 @@ const AAA=[
 {id:"spellmerge",icon:"🔮",title:"SpellMerge Dungeon",tag:"AAA • MATCH-3 RPG",desc:"Real match-3 spells with cascades and bosses."},
 {id:"fighter",icon:"🚀",title:"Neon Fighter 2D",tag:"AAA • SHOOTER",desc:"Wave shooter with powerups and bosses."},
 {id:"horde",icon:"🧟",title:"Horde Survivors",tag:"AAA • ACTION ROGUELITE",desc:"Survive endless hordes: auto-fire weapons, level-up cards, orbiting blades, chain lightning and titan bosses."},
-{id:"bastion",icon:"🛡️",title:"Bastion Defense",tag:"AAA • TOWER DEFENSE",desc:"Build and upgrade archer, cannon, frost and tesla towers across 25 waves with boss fights."}
+{id:"bastion",icon:"🛡️",title:"Bastion Defense",tag:"AAA • TOWER DEFENSE",desc:"Build and upgrade archer, cannon, frost and tesla towers across 25 waves with boss fights."},
+{id:"gravity",icon:"🌀",title:"Gravity Flip",tag:"ARCADE • ONE TAP",desc:"Tap to flip gravity, dodge the spikes and grab the gold."},
+{id:"bubblewrap",icon:"🔘",title:"Bubble Wrap Pop",tag:"RELAX • POP",desc:"Pop every bubble on the sheet. It refills when you are done."},
+{id:"sandgarden",icon:"🏖️",title:"Sand Garden",tag:"RELAX • RAKE",desc:"Place stones and watch the raked lines bend around them."},
+{id:"fidget",icon:"🔄",title:"Fidget Spinner",tag:"RELAX • SPIN",desc:"Tap left or right to set the spinner turning."},
+{id:"slime",icon:"🟢",title:"Slime Stretch",tag:"RELAX • SQUISH",desc:"Poke the slime and watch it stretch and wobble back."},
+{id:"zenripple",icon:"💧",title:"Zen Ripple",tag:"RELAX • WATER",desc:"Drop stones into still water and watch the rings spread."},
+{id:"kinetic",icon:"⏳",title:"Kinetic Sand",tag:"RELAX • SHAPE",desc:"Touch the sand to lift it, then let it fall and pile up."},
+{id:"stickyball",icon:"🔴",title:"Sticky Drop",tag:"RELAX • STACK",desc:"Drop sticky balls onto the pile and build a tower."},
+{id:"pottery",icon:"🏺",title:"Pottery Wheel",tag:"RELAX • SHAPE",desc:"Touch the clay wall to push it into shape as the wheel turns."},
+{id:"inkwater",icon:"🖋️",title:"Ink in Water",tag:"RELAX • SWIRL",desc:"Drop ink into water and watch it swirl and spread."},
+{id:"marblerun",icon:"⚪",title:"Marble Run",tag:"RELAX • ROLL",desc:"Drop marbles from the top and watch them roll down the ramps."},
+{id:"popcorn",icon:"🍿",title:"Popcorn Pop",tag:"RELAX • HEAT",desc:"Warm the kernels by tapping near them until they pop."},
+{id:"balloon",icon:"🎈",title:"Balloon Float",tag:"RELAX • FLOAT",desc:"Release balloons and lift the ones drifting by."},
+{id:"paintmix",icon:"🎨",title:"Paint Mixing",tag:"RELAX • COLOUR",desc:"Drop paint and watch the colours blend where they meet."},
+{id:"windchimes",icon:"🎐",title:"Wind Chimes",tag:"RELAX • SOUND",desc:"Blow a gust across the chimes and listen to them ring."},
+{id:"soapbubbles",icon:"🧼",title:"Soap Bubbles",tag:"RELAX • FLOAT",desc:"Blow bubbles, then pop them with a tap for a little spark."},
+{id:"snowglobe",icon:"❄️",title:"Snow Globe",tag:"RELAX • SHAKE",desc:"Shake the globe and watch the snow settle again."},
+{id:"koipond",icon:"🐟",title:"Koi Pond",tag:"RELAX • FEED",desc:"Drop food on the pond and watch the koi come to feed."},
+{id:"rainwindow",icon:"🌧️",title:"Rain Window",tag:"RELAX • WIPE",desc:"Wipe the fogged glass clear and watch the rain behind it."},
+{id:"ballpit",icon:"🟣",title:"Ball Pit",tag:"RELAX • STIR",desc:"Stir the colourful balls and drop new ones into the pit."},
+{id:"lavalamp",icon:"🌋",title:"Lava Lamp",tag:"RELAX • GLOW",desc:"Heat the blobs and watch them rise and sink slowly."}
 ];
 /* ===== AGENT AAA BEGIN ===== */
 window.AAA_MODS={};(function(){for(const r of (window.__AG_PACKS||[])){if(!r)continue;for(const a of (r.aaa||[])){const e=Object.assign({},a);delete e.mod;if(!AAA.some(x=>x.id===e.id))AAA.push(e);window.AAA_MODS[a.id]=a.mod}}})();
@@ -40571,7 +41740,7 @@ function launchAAA(key){
  if(window.__threeMissing){toast("three.js CDN failed to load — internet required");return}
  $("gameScreen").classList.remove("hidden");
  ACT.key=key;
- const mod=(window.AAA_MODS&&window.AAA_MODS[key])||(key==="voxel"?Voxel:key==="calradia"?Calradia:key==="drift3d"?Drift3D:key==="spellmerge"?SpellMerge:key==="horde"?Horde:key==="bastion"?Bastion:NeonFighter);
+ const mod=(window.AAA_MODS&&window.AAA_MODS[key])||(key==="voxel"?Voxel:key==="calradia"?Calradia:key==="drift3d"?Drift3D:key==="spellmerge"?SpellMerge:key==="horde"?Horde:key==="bastion"?Bastion:key==="gravity"?Gravity:key==="bubblewrap"?BubbleWrap:key==="sandgarden"?SandGarden:key==="fidget"?FidgetSpin:key==="slime"?SlimeStretch:key==="zenripple"?ZenRipple:key==="kinetic"?KineticSand:key==="stickyball"?StickyDrop:key==="pottery"?PotteryWheel:key==="inkwater"?InkWater:key==="marblerun"?MarbleRun:key==="popcorn"?PopcornPop:key==="balloon"?BalloonFloat:key==="paintmix"?PaintMix:key==="windchimes"?WindChimes:key==="soapbubbles"?SoapBubbles:key==="snowglobe"?SnowGlobe:key==="koipond"?KoiPond:key==="rainwindow"?RainWindow:key==="ballpit"?BallPit:key==="lavalamp"?LavaLamp:NeonFighter);
  showContainers((key==="voxel"||key==="calradia"||key==="drift3d")?"3d":"2d");
  resize2D();
  ACT.mod=mod;try{mod.init()}catch(e){console.error(e);toast("Module error");goHub()}
@@ -40680,7 +41849,7 @@ function restartCurrent(){
  if(ACT.key==="blade"||ACT.key==="nebula"){toast("This game has its own refresh — go back to the HUB and open it again");return}
  if(ACT.mini){const g=ACT.mini;if(ACT.engine&&ACT.engine.stop)try{ACT.engine.stop()}catch(e){}miniSetOverlay("miniResult",false);miniSetOverlay("miniPause",false);MINI_Q={active:true,paused:false,ended:false,start:performance.now(),elapsed:0,g:g,won:false,reward:0,pauseAt:0,pausedTotal:0};try{ACT.engine=(ENGINES[g.engine]||gameSnake)(g);miniInstallEngine(g);miniSetControlHint(g)}catch(e){ACT.engine=null}}
  else if(ACT.mod){const key=ACT.key;MOD_PAUSED=false;miniSetOverlay("miniPause",false);$("miniPauseBtn").textContent="⏸";try{ACT.mod.destroy()}catch(e){}
-  const mod=(window.AAA_MODS&&window.AAA_MODS[key])||(key==="voxel"?Voxel:key==="calradia"?Calradia:key==="drift3d"?Drift3D:key==="spellmerge"?SpellMerge:key==="horde"?Horde:key==="bastion"?Bastion:NeonFighter);
+  const mod=(window.AAA_MODS&&window.AAA_MODS[key])||(key==="voxel"?Voxel:key==="calradia"?Calradia:key==="drift3d"?Drift3D:key==="spellmerge"?SpellMerge:key==="horde"?Horde:key==="bastion"?Bastion:key==="gravity"?Gravity:key==="bubblewrap"?BubbleWrap:key==="sandgarden"?SandGarden:key==="fidget"?FidgetSpin:key==="slime"?SlimeStretch:key==="zenripple"?ZenRipple:key==="kinetic"?KineticSand:key==="stickyball"?StickyDrop:key==="pottery"?PotteryWheel:key==="inkwater"?InkWater:key==="marblerun"?MarbleRun:key==="popcorn"?PopcornPop:key==="balloon"?BalloonFloat:key==="paintmix"?PaintMix:key==="windchimes"?WindChimes:key==="soapbubbles"?SoapBubbles:key==="snowglobe"?SnowGlobe:key==="koipond"?KoiPond:key==="rainwindow"?RainWindow:key==="ballpit"?BallPit:key==="lavalamp"?LavaLamp:NeonFighter);
   ACT.mod=mod;try{mod.init()}catch(e){console.error(e)}}}
 addEventListener("keydown",e=>{if(e.key==="Escape"){const br=$("bladeRoot"),nr=$("nebulaRoot"),wr=$("warbandRoot");
  if(wr&&!wr.classList.contains("hidden")){exitWarband();return}

@@ -10,8 +10,8 @@ android {
         applicationId = "com.umutk.megagames"
         minSdk = 26
         targetSdk = 34
-        versionCode = 15
-        versionName = "2.12"
+        versionCode = 17
+        versionName = "2.14"
     }
     buildTypes { release { isMinifyEnabled = false; signingConfig = signingConfigs.getByName("debug") } }
     compileOptions { sourceCompatibility = JavaVersion.VERSION_17; targetCompatibility = JavaVersion.VERSION_17 }

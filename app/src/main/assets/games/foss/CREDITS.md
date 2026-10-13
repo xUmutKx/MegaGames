@@ -1,0 +1,10 @@
+- HexGL (`hexgl`): MIT, by Thibaut Despoulain (BKcore), https://github.com/BKcore/HexGL
+- Sokoban Basic (`sokoban-basic`): MIT, increpare and contributors, https://github.com/increpare/PuzzleScript
+- Sokoban Horizontal (`sokoban-horizontal`): MIT, increpare and contributors, https://github.com/increpare/PuzzleScript
+- Sumo (`sumo`): MIT, increpare and contributors, https://github.com/increpare/PuzzleScript
+- Notsnake (`not-snake`): MIT, increpare and contributors, https://github.com/increpare/PuzzleScript
+- Two Little Crates 1 (`two-little-crates`): MIT, increpare and contributors, https://github.com/increpare/PuzzleScript
+- Octat (`octat`): MIT, increpare and contributors, https://github.com/increpare/PuzzleScript
+- Modality (`modality`): MIT, increpare and contributors, https://github.com/increpare/PuzzleScript
+- Lunar Lockout (`lunar-lockout`): MIT, increpare and contributors, https://github.com/increpare/PuzzleScript
+- Neko Puzzle (`neko-puzzle`): MIT, increpare and contributors, https://github.com/increpare/PuzzleScript

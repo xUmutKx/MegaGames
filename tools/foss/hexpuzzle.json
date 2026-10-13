@@ -1,0 +1,82 @@
+[
+  {
+    "id": "hexgl",
+    "title": "HexGL",
+    "entry": "games/foss/hexgl/index.html",
+    "license": "MIT",
+    "source": "https://github.com/BKcore/HexGL/tree/master",
+    "note": "Loads a Google Analytics script when online (not bundled); source headers cite CC BY-NC 3.0"
+  },
+  {
+    "id": "sokoban-basic",
+    "title": "Sokoban Basic",
+    "entry": "games/foss/sokoban-basic/index.html",
+    "license": "MIT",
+    "source": "https://github.com/increpare/PuzzleScript/tree/master/src/demo/sokoban_basic.txt",
+    "note": "PuzzleScript demo, engine standalone build with game data inlined; no external loads"
+  },
+  {
+    "id": "sokoban-horizontal",
+    "title": "Sokoban Horizontal",
+    "entry": "games/foss/sokoban-horizontal/index.html",
+    "license": "MIT",
+    "source": "https://github.com/increpare/PuzzleScript/tree/master/src/demo/sokoban_horizontal.txt",
+    "note": "PuzzleScript demo, engine standalone build with game data inlined; no external loads"
+  },
+  {
+    "id": "sumo",
+    "title": "Sumo",
+    "entry": "games/foss/sumo/index.html",
+    "license": "MIT",
+    "source": "https://github.com/increpare/PuzzleScript/tree/master/src/demo/sumo.txt",
+    "note": "PuzzleScript demo, engine standalone build with game data inlined; no external loads"
+  },
+  {
+    "id": "not-snake",
+    "title": "Notsnake",
+    "entry": "games/foss/not-snake/index.html",
+    "license": "MIT",
+    "source": "https://github.com/increpare/PuzzleScript/tree/master/src/demo/notsnake.txt",
+    "note": "PuzzleScript demo, engine standalone build with game data inlined; no external loads"
+  },
+  {
+    "id": "two-little-crates",
+    "title": "Two Little Crates 1",
+    "entry": "games/foss/two-little-crates/index.html",
+    "license": "MIT",
+    "source": "https://github.com/increpare/PuzzleScript/tree/master/src/demo/twolittlecrates1.txt",
+    "note": "PuzzleScript demo, engine standalone build with game data inlined; no external loads"
+  },
+  {
+    "id": "octat",
+    "title": "Octat",
+    "entry": "games/foss/octat/index.html",
+    "license": "MIT",
+    "source": "https://github.com/increpare/PuzzleScript/tree/master/src/demo/octat.txt",
+    "note": "PuzzleScript demo, engine standalone build with game data inlined; no external loads"
+  },
+  {
+    "id": "modality",
+    "title": "Modality",
+    "entry": "games/foss/modality/index.html",
+    "license": "MIT",
+    "source": "https://github.com/increpare/PuzzleScript/tree/master/src/demo/modality.txt",
+    "note": "PuzzleScript demo, engine standalone build with game data inlined; no external loads"
+  },
+  {
+    "id": "lunar-lockout",
+    "title": "Lunar Lockout",
+    "entry": "games/foss/lunar-lockout/index.html",
+    "license": "MIT",
+    "source": "https://github.com/increpare/PuzzleScript/tree/master/src/demo/lunar_lockout.txt",
+    "note": "PuzzleScript demo, engine standalone build with game data inlined; no external loads"
+  },
+  {
+    "id": "neko-puzzle",
+    "title": "Neko Puzzle",
+    "entry": "games/foss/neko-puzzle/index.html",
+    "license": "MIT",
+    "source": "https://github.com/increpare/PuzzleScript/tree/master/src/demo/nekopuzzle.txt",
+    "note": "PuzzleScript demo, engine standalone build with game data inlined; no external loads"
+  }
+]
